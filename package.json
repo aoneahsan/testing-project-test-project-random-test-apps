@@ -1,0 +1,23 @@
+{
+	"name": "01-tool-kit-package-testing",
+	"version": "1.0.0",
+	"main": "index.js",
+	"devDependencies": {
+		"ts-node": "^10.9.2",
+		"typescript": "^5.4.5"
+	},
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"description": "",
+	"engines": {
+		"node": ">=22.2.0",
+		"npm": ">=10.7.0",
+		"yarn": ">=1.22.22",
+		"pnpm": ">=9.0.6"
+	},
+	"packageManager": "yarn@1.22.22"
+}
