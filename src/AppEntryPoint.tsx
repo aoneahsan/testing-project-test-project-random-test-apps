@@ -1,8 +1,9 @@
 import { Theme } from '@radix-ui/themes';
-import Home from './pages/Home';
 
 // Import Radix UI CSS
 import '@radix-ui/themes/styles.css';
+import { RouterProvider } from 'react-router-dom';
+import { appRouter } from './AppRouter';
 
 const AppEntryPoint: React.FC = () => (
 	<>
@@ -13,7 +14,7 @@ const AppEntryPoint: React.FC = () => (
 		// scaling='110%'
 		// appearance='dark'
 		>
-			<Home />
+			<RouterProvider router={appRouter} />
 			{/* <ThemePanel /> */}
 		</Theme>
 	</>
