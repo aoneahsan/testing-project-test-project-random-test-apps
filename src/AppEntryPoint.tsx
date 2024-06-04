@@ -3,7 +3,7 @@ import { Theme } from '@radix-ui/themes';
 // Import Radix UI CSS
 import '@radix-ui/themes/styles.css';
 import { RouterProvider } from 'react-router-dom';
-import { appRouter } from './AppRouter';
+import { appRouter } from '@/AppRouter';
 
 const AppEntryPoint: React.FC = () => (
 	<>

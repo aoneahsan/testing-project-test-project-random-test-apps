@@ -1,4 +1,4 @@
-import AppEntryPoint from './AppEntryPoint'
+import AppEntryPoint from '@/AppEntryPoint'
 
 const App: React.FC = () => <AppEntryPoint />;
 

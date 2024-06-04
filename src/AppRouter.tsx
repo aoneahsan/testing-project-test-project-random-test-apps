@@ -1,7 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom';
-import Home from './pages/Home';
-import ErrorBoundary from './components/errors/ErrorBoundary';
-import RegisterPage from './pages/auth/Register';
+import Home from '@/pages/Home';
+import ErrorBoundary from '@/components/errors/ErrorBoundary';
+import RegisterPage from '@/pages/auth/Register';
 
 export const appRouter = createBrowserRouter([
 	{

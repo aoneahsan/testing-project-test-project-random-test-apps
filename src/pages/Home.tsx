@@ -1,5 +1,4 @@
-import ExploreContainer from '../components/ExploreContainer';
-import './Home.css';
+import ExploreContainer from '@/components/ExploreContainer';
 
 const Home: React.FC = () => {
 	return <ExploreContainer />;
