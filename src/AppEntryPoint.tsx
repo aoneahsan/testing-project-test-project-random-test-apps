@@ -4,17 +4,20 @@ import { Theme } from '@radix-ui/themes';
 import '@radix-ui/themes/styles.css';
 import { RouterProvider } from 'react-router-dom';
 import { appRouter } from '@/AppRouter';
+import { RecoilRoot } from 'recoil';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
 
 const AppEntryPoint: React.FC = () => (
 	<>
-		<Theme
-		// accentColor='orange'
-		// grayColor='sand'
-		// radius='full'
-		// scaling='110%'
-		// appearance='dark'
-		>
-			<RouterProvider router={appRouter} />
+		<Theme>
+			<RecoilRoot>
+				<QueryClientProvider client={queryClient}>
+					
+					<RouterProvider router={appRouter} />
+				</QueryClientProvider>
+			</RecoilRoot>
 			{/* <ThemePanel /> */}
 		</Theme>
 	</>

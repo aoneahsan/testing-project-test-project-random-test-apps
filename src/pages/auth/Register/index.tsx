@@ -1,7 +1,7 @@
 import { Heading } from '@radix-ui/themes';
 import React from 'react';
 
-const RegisterPage: React.FC = () => {
-	return <Heading>RegisterPage :)</Heading>;
+const Register: React.FC = () => {
+	return <Heading>Register :)</Heading>;
 };
-export default RegisterPage;
+export default Register;

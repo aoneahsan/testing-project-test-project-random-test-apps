@@ -1,7 +1,5 @@
-import ExploreContainer from '@/components/ExploreContainer';
-
 const Home: React.FC = () => {
-	return <ExploreContainer />;
+	return <h1>home</h1>;
 };
 
 export default Home;
