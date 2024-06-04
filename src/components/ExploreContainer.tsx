@@ -1,12 +1,14 @@
-import './ExploreContainer.css';
+import { Button, Flex, Text } from '@radix-ui/themes';
 
-interface ContainerProps {}
-
-const ExploreContainer: React.FC<ContainerProps> = () => {
+const ExploreContainer: React.FC = () => {
 	return (
-		<div id='container'>
-			<strong>Ready to create an app?</strong>
-		</div>
+		<Flex
+			direction='column'
+			gap='2'
+		>
+			<Text>Hello from Radix Themes :)</Text>
+			<Button>Let's go</Button>
+		</Flex>
 	);
 };
 

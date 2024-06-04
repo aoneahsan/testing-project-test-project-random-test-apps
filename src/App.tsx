@@ -1,6 +1,5 @@
-import { Route } from 'react-router-dom';
-import Home from './pages/Home';
+import AppEntryPoint from './AppEntryPoint'
 
-const App: React.FC = () => <Home />;
+const App: React.FC = () => <AppEntryPoint />;
 
 export default App;
