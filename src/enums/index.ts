@@ -7,3 +7,9 @@ export enum ErrorCodeEnum {
 	notFound = 404,
 	serverError = 500,
 }
+
+export enum FormFieldType {
+	text = 'text',
+	email = 'email',
+	password = 'password',
+}
