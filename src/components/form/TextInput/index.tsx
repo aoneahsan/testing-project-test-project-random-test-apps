@@ -1,5 +1,9 @@
 import { FormFieldType } from '@/enums';
-import { LoginFormFieldsEnum, RegisterFormFieldsEnum } from '@/enums/formData';
+import {
+	LoginFormFieldsEnum,
+	RegisterFormFieldsEnum,
+	UserAccountDataFormFieldsEnum,
+} from '@/enums/formData';
 import { ILoginFormData, IRegisterFormData } from '@/types/formData';
 import { Box, IconButton, Text, TextField } from '@radix-ui/themes';
 import { useFormikContext } from 'formik';
@@ -7,7 +11,10 @@ import { EyeOpenIcon, EyeClosedIcon } from '@radix-ui/react-icons';
 import { useState } from 'react';
 
 interface TextInputProps {
-	inputName: RegisterFormFieldsEnum | LoginFormFieldsEnum;
+	inputName:
+		| RegisterFormFieldsEnum
+		| LoginFormFieldsEnum
+		| UserAccountDataFormFieldsEnum;
 	placeholder: string;
 	type: FormFieldType;
 	value: string | number | undefined;

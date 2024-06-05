@@ -72,15 +72,13 @@ export const setAuthDataInLocalStorage = async ({
 	userData?: IUser;
 	authToken?: string;
 }): Promise<void> => {
-	try {
-		if (userData) {
-			await STORAGE.set(LOCALSTORAGE_KEYS.userData, userData);
-		}
+	if (userData) {
+		await STORAGE.set(LOCALSTORAGE_KEYS.userData, userData);
+	}
 
-		if (authToken) {
-			await STORAGE.set(LOCALSTORAGE_KEYS.userAuthToken, authToken);
-		}
-	} catch (error) {}
+	if (authToken) {
+		await STORAGE.set(LOCALSTORAGE_KEYS.userAuthToken, authToken);
+	}
 };
 
 export const getAuthTokenFromLocalStorage = async () => {

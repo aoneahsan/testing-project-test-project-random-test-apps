@@ -1,24 +1,29 @@
 import axiosInstance from '@/axiosInstance';
-import { ErrorCodeEnum, RequestTypeEnum } from '@/enums';
+import { RequestTypeEnum } from '@/enums';
+import { ResponseStatusEnum } from '@/enums/backendApi';
+import { userDataRStateAtom } from '@/state/userState';
 import {
 	clearAuthDataFromLocalStorage,
 	getAuthTokenFromLocalStorage,
 } from '@/utils/helpers';
+import { MESSAGES } from '@/utils/messages';
 import { reportError } from '@/utils/reportError';
 import {
 	QueryFilters,
 	useMutation,
+	useQuery,
 	useQueryClient,
 } from '@tanstack/react-query';
-import { AxiosError } from 'axios';
+import { useSetRecoilState } from 'recoil';
 
 const useMutationRequest = (
 	method: RequestTypeEnum = RequestTypeEnum.post,
 	queriesToInvalidate?: QueryFilters
 ) => {
 	const queryClient = useQueryClient();
+	const setUserDataRState = useSetRecoilState(userDataRStateAtom);
 
-	return useMutation({
+	const _mutation = useMutation({
 		mutationFn: async ({
 			url,
 			data,
@@ -34,11 +39,9 @@ const useMutationRequest = (
 			if (isAuthenticatedRequest) {
 				authToken = await getAuthTokenFromLocalStorage();
 
-				if (!authToken || authToken?.trim()?.length <= 0) {
-					throw new Error('Invalid Auth Token');
+				if (authToken && authToken?.trim()?.length > 0) {
+					headers.Authorization = `Bearer ${authToken}`;
 				}
-
-				headers.Authorization = `Bearer ${authToken}`;
 			}
 
 			if (url) {
@@ -73,18 +76,14 @@ const useMutationRequest = (
 				await queryClient.invalidateQueries(queriesToInvalidate);
 			}
 		},
-		onError: async (_error) => {
-			try {
-				reportError(_error);
-
-				const axiosErr = _error as AxiosError;
-				const errorStatus = axiosErr.response?.status;
-				if (errorStatus === ErrorCodeEnum.unAuthenticated) {
-					await clearAuthDataFromLocalStorage();
-				}
-			} catch (error) {}
-		},
 	});
+
+	const _status = _mutation.data?.status;
+	const _error = _mutation.error;
+
+	checkIfUserIsUnAuthenticated(_status, _error, setUserDataRState);
+
+	return _mutation;
 };
 
 export const usePostRequest = (queriesToInvalidate?: QueryFilters) => {
@@ -97,4 +96,70 @@ export const usePutRequest = (queriesToInvalidate?: QueryFilters) => {
 
 export const useDeleteRequest = (queriesToInvalidate?: QueryFilters) => {
 	return useMutationRequest(RequestTypeEnum.delete, queriesToInvalidate);
+};
+
+export const useGetRequest = (
+	url: string,
+	isAuthenticatedRequest: boolean = true
+) => {
+	const setUserDataRState = useSetRecoilState(userDataRStateAtom);
+
+	const _query = useQuery({
+		queryKey: [],
+		queryFn: async () => {
+			let authToken: string | null = null;
+			const headers: Record<string, string> = {};
+
+			if (isAuthenticatedRequest) {
+				authToken = await getAuthTokenFromLocalStorage();
+
+				if (!authToken || authToken?.trim()?.length <= 0) {
+					return null;
+				}
+
+				headers.Authorization = `Bearer ${authToken}`;
+			}
+
+			if (url) {
+				return await axiosInstance.get(url, {
+					headers,
+				});
+			} else {
+				throw new Error('No API Url Provided');
+			}
+		},
+		refetchOnReconnect: true,
+		refetchOnWindowFocus: true,
+	});
+
+	const _status = _query.data?.status;
+	const _error = _query.error;
+
+	if (_status) {
+		checkIfUserIsUnAuthenticated(_status, _error, setUserDataRState);
+	}
+
+	return _query;
+};
+
+const checkIfUserIsUnAuthenticated = (
+	status: number | undefined,
+	error: Error | null,
+	setUserDataRState: (val: null) => void
+) => {
+	if (status === ResponseStatusEnum.unAuthenticated) {
+		void (async () => {
+			reportError(error ?? MESSAGES.errors.unAuthenticated);
+
+			await clearAuthDataAndAuthState(setUserDataRState);
+		})();
+	}
+};
+
+const clearAuthDataAndAuthState = async (
+	setUserDataRState: (val: null) => void
+) => {
+	await clearAuthDataFromLocalStorage();
+
+	setUserDataRState(null);
 };

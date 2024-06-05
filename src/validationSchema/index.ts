@@ -2,7 +2,10 @@ import { RegisterFormFieldsEnum } from '@/enums/formData';
 import { z as ZOD } from 'zod';
 
 export const registerFormValidationSchema = ZOD.object({
-	[RegisterFormFieldsEnum.name]: ZOD.string().trim().min(1, { message: 'Name is Required.' }).max(255),
+	[RegisterFormFieldsEnum.name]: ZOD.string()
+		.trim()
+		.min(1, { message: 'Name is Required.' })
+		.max(255),
 	[RegisterFormFieldsEnum.email]: ZOD.string().email().max(255),
 	[RegisterFormFieldsEnum.password]: ZOD.string().min(6).max(30),
 	[RegisterFormFieldsEnum.passwordConfirmation]: ZOD.string().min(6).max(30),
@@ -17,17 +20,16 @@ export const registerFormValidationSchema = ZOD.object({
 			path: [RegisterFormFieldsEnum.passwordConfirmation],
 		});
 	}
-
-	// if (values[RegisterFormFieldsEnum.name].length <= 0) {
-	// 	ctx.addIssue({
-	// 		code: 'custom',
-	// 		message: 'Name is required.',
-	// 		path: [RegisterFormFieldsEnum.name],
-	// 	});
-	// }
 });
 
 export const loginFormValidationSchema = ZOD.object({
 	[RegisterFormFieldsEnum.email]: ZOD.string().email().max(255),
 	[RegisterFormFieldsEnum.password]: ZOD.string().min(6).max(30),
+});
+
+export const userAccountFormValidationSchema = ZOD.object({
+	[RegisterFormFieldsEnum.name]: ZOD.string()
+		.trim()
+		.min(1, { message: 'Name is Required.' })
+		.max(255),
 });

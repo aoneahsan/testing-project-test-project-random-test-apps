@@ -9,3 +9,7 @@ export enum LoginFormFieldsEnum {
 	email = 'email',
 	password = 'password',
 }
+
+export enum UserAccountDataFormFieldsEnum {
+	name = 'name',
+}

@@ -23,3 +23,9 @@ export const registerFormFields = {
 		placeholder: 'Password Confirmation',
 	},
 } as const;
+export const userAccountDataFormFields = {
+	[RegisterFormFieldsEnum.name]: {
+		type: FormFieldType.text,
+		placeholder: 'Name',
+	},
+} as const;

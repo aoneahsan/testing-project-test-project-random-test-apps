@@ -4,7 +4,12 @@ import { getAuthDataFromLocalStorage } from '@/utils/helpers';
 import React, { ReactNode, useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { Navigate } from 'react-router-dom';
-import { APP_ROUTES } from '@/utils/constants';
+import { API_URLS, APP_ROUTES } from '@/utils/constants';
+import { useGetRequest, usePostRequest } from '@/hooks/reactQuery';
+import ErrorBoundary from '@/components/errors/ErrorBoundary';
+import { MESSAGES } from '@/utils/messages';
+import { IApiResponse } from '@/types/backendApi';
+import { IUser } from '@/types/userData';
 
 const AuthenticationHOC: React.FC<{
 	children: ReactNode;
@@ -15,6 +20,12 @@ const AuthenticationHOC: React.FC<{
 	});
 	const [userDataRState, setUserDataRState] =
 		useRecoilState(userDataRStateAtom);
+	const { mutateAsync: updateUserStatus } = usePostRequest();
+	const {
+		data: response,
+		isFetching,
+		isError,
+	} = useGetRequest(API_URLS.getUserData);
 
 	useEffect(() => {
 		try {
@@ -22,26 +33,41 @@ const AuthenticationHOC: React.FC<{
 				const _authData = await getAuthDataFromLocalStorage();
 
 				if (_authData?.authToken && _authData?.userData?.email) {
-					setUserDataRState(_authData?.userData);
+					// update user status in backend (lastActiveAt)
+					await updateUserStatus({
+						url: API_URLS.updateUserStatus,
+						isAuthenticatedRequest: true,
+					});
+				}
+			})();
+		} catch (error) {}
+	}, []);
+
+	useEffect(() => {
+		if (!isFetching && !isError && response && response.data) {
+			try {
+				const _res = JSON.parse(response.data) as IApiResponse<IUser>;
+				const userData = _res.result?.data;
+
+				if (userData) {
+					setUserDataRState(userData);
 				}
 				setCompState((oldState) => ({
 					...oldState,
 					processing: false,
 				}));
-			})();
-		} catch (error) {
-			setCompState((oldState) => ({
-				...oldState,
-				processing: false,
-			}));
+			} catch (error) {
+				setCompState((oldState) => ({
+					...oldState,
+					processing: false,
+				}));
+			}
 		}
-	}, []);
+	}, [response, isFetching, isError]);
 
-	useEffect(() => {}, []);
-
-	if (compState.processing) {
+	if (compState.processing || isFetching) {
 		return <FullPageLoader />;
-	} else if (!compState.processing) {
+	} else if (!compState.processing && !isError) {
 		if (isAuthenticatedView) {
 			if (userDataRState?.email) {
 				return children;
@@ -55,6 +81,8 @@ const AuthenticationHOC: React.FC<{
 				return children;
 			}
 		}
+	} else {
+		return <ErrorBoundary message={MESSAGES.errors.authCheckFailed} />;
 	}
 };
 export default AuthenticationHOC;

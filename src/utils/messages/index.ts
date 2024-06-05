@@ -1,11 +1,15 @@
 export const MESSAGES = {
 	general: {
 		success: 'Request completed successfully!',
-		failed: 'Request failed!',
+		failed: 'Request failed, Something Went Wrong :/',
 		notFound: 'Not Found!',
 		invalidData: 'Please Enter Valid Data.',
 	},
 	backendApi: {
 		invalidUserData: 'Invalid User data found, please try again later!',
+	},
+	errors: {
+		unAuthenticated: 'UnAuthenticated, please login again.',
+		authCheckFailed: 'Error Ocurred while checking the user auth state.',
 	},
 };

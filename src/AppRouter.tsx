@@ -6,6 +6,8 @@ import { APP_ROUTES } from './utils/constants';
 import Login from './pages/auth/Login';
 import UserFeed from './pages/UserFeed';
 import AuthenticationHOC from './HOC/AuthenticationHOC';
+import NotFound from './pages/NotFound';
+import MyAccount from './pages/MyAccount';
 
 export const appRouter = createBrowserRouter([
 	{
@@ -42,6 +44,20 @@ export const appRouter = createBrowserRouter([
 			</AuthenticationHOC>
 		),
 		path: APP_ROUTES.userFeed,
+		errorElement: <ErrorBoundary />,
+	},
+	{
+		element: (
+			<AuthenticationHOC isAuthenticatedView>
+				<MyAccount />
+			</AuthenticationHOC>
+		),
+		path: APP_ROUTES.myAccount,
+		errorElement: <ErrorBoundary />,
+	},
+	{
+		element: <NotFound />,
+		path: APP_ROUTES.wildCard,
 		errorElement: <ErrorBoundary />,
 	},
 ]);

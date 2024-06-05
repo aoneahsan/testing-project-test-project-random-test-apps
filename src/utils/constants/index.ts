@@ -11,10 +11,12 @@ export const React_QUERY_KEYS = {
 } as const;
 
 export const APP_ROUTES = {
+	wildCard: '*',
 	home: '/',
 	register: '/register',
 	login: '/login',
 	userFeed: '/feed',
+	myAccount: '/my-account',
 };
 export const API_URLS = {
 	register: '/register',
@@ -22,4 +24,5 @@ export const API_URLS = {
 	logout: '/logout',
 	getUserData: '/getUserData',
 	updateUserData: '/updateUserData',
-}
+	updateUserStatus: '/updateUserStatus',
+};
