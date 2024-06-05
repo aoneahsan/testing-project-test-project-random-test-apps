@@ -16,3 +16,6 @@ export const APP_ROUTES = {
 	login: '/login',
 	userFeed: '/feed',
 };
+export const API_URLS = {
+	register: '/register'
+}

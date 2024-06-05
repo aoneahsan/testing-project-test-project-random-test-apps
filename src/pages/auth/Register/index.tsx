@@ -1,19 +1,44 @@
+import axiosInstance from '@/axiosInstance';
 import TextInput from '@/components/form/TextInput';
+import { ResponseCodeEnum, ResponseStatusEnum } from '@/enums/backendApi';
 import { RegisterFormFieldsEnum } from '@/enums/formData';
+import { usePostRequest } from '@/hooks/reactQuery';
+import { userDataRStateAtom } from '@/state/userState';
+import { IApiResponse } from '@/types/backendApi';
+import { IUser } from '@/types/userData';
+import { API_URLS, APP_ROUTES } from '@/utils/constants';
 import { registerFormFields } from '@/utils/constants/formFields';
+import {
+	formatFormErrorsFromApiResponse,
+	setAuthDataInLocalStorage,
+} from '@/utils/helpers';
+import { showToast } from '@/utils/helpers/capacitorApis';
+import {
+	showErrorNotification,
+	showSuccessNotification,
+} from '@/utils/helpers/react-toastify';
+import { MESSAGES } from '@/utils/messages';
 import { registerFormValidationSchema } from '@/validationSchema';
-import { Box, Button, Card, Flex, Heading } from '@radix-ui/themes';
+import { Box, Button, Card, Flex, Heading, Link, Text } from '@radix-ui/themes';
 import { Form, Formik } from 'formik';
 import React, { useMemo } from 'react';
+import { useNavigate } from 'react-router';
+import { useSetRecoilState } from 'recoil';
 import { ZodError } from 'zod';
 
 const Register: React.FC = () => {
+	const navigate = useNavigate();
+
+	const navigateToLoginPage = () => {
+		navigate(APP_ROUTES.login);
+	};
 	return (
 		<Box>
 			<Flex
 				justify='center'
 				align='center'
 				minHeight='100vh'
+				direction='column'
 			>
 				<Card>
 					<Box
@@ -30,6 +55,15 @@ const Register: React.FC = () => {
 						<RegisterForm />
 					</Box>
 				</Card>
+				<Text mt='3'>
+					Already have a account?{' '}
+					<Link
+						onClick={navigateToLoginPage}
+						className='pointer'
+					>
+						Login
+					</Link>
+				</Text>
 			</Flex>
 		</Box>
 	);
@@ -38,13 +72,15 @@ const Register: React.FC = () => {
 const RegisterForm: React.FC = () => {
 	const initialValues = useMemo(
 		() => ({
-			[RegisterFormFieldsEnum.name]: '',
-			[RegisterFormFieldsEnum.email]: '',
-			[RegisterFormFieldsEnum.password]: '',
-			[RegisterFormFieldsEnum.passwordConfirmation]: '',
+			[RegisterFormFieldsEnum.name]: 'asd',
+			[RegisterFormFieldsEnum.email]: 'asd@asd.asd',
+			[RegisterFormFieldsEnum.password]: 'asdasd',
+			[RegisterFormFieldsEnum.passwordConfirmation]: 'asdasd',
 		}),
 		[]
 	);
+	const { mutateAsync } = usePostRequest();
+	const setUserDataRState = useSetRecoilState(userDataRStateAtom);
 
 	return (
 		<Formik
@@ -54,15 +90,57 @@ const RegisterForm: React.FC = () => {
 					registerFormValidationSchema.parse(values);
 				} catch (error) {
 					if (error instanceof ZodError) {
+						showToast(MESSAGES.general.invalidData);
+
 						return error.formErrors.fieldErrors;
 					}
 				}
 			}}
-			onSubmit={(values) => {
-				console.log({ values });
+			onSubmit={async (values, { setErrors }) => {
+				const reqData = JSON.stringify({
+					name: values[RegisterFormFieldsEnum.name],
+					email: values[RegisterFormFieldsEnum.email],
+					password: values[RegisterFormFieldsEnum.password],
+					password_confirmation:
+						values[RegisterFormFieldsEnum.passwordConfirmation], // backend laravel API requires us to send "password_confirmation" to confirm the password
+				});
+
+				try {
+					const res = await mutateAsync({
+						url: API_URLS.register,
+						data: reqData,
+					});
+
+					const resData = JSON.parse(res.data) as IApiResponse<IUser>;
+
+					if (resData.errors) {
+						const _errors = formatFormErrorsFromApiResponse(resData.errors);
+						if (_errors) {
+							showToast(MESSAGES.general.invalidData);
+							setErrors(_errors);
+						}
+					} else {
+						const userData = resData.result?.data;
+						const authToken = resData.result?.authToken;
+
+						if (userData && authToken) {
+							await setAuthDataInLocalStorage({ userData, authToken });
+
+							showSuccessNotification();
+
+							setUserDataRState(userData);
+						} else {
+							showErrorNotification(
+								'Invalid User data found, please try again later!'
+							);
+						}
+					}
+				} catch (error) {
+					console.error(error);
+				}
 			}}
 		>
-			{({ values, errors, touched }) => {
+			{({ values, errors, touched, isValid, dirty }) => {
 				return (
 					<Form>
 						{(Object.keys(registerFormFields) as RegisterFormFieldsEnum[]).map(
@@ -86,10 +164,16 @@ const RegisterForm: React.FC = () => {
 								<Button
 									type='reset'
 									color='red'
+									disabled={!dirty}
 								>
 									Reset
 								</Button>
-								<Button type='submit'>Submit</Button>
+								<Button
+									type='submit'
+									disabled={!isValid}
+								>
+									Submit
+								</Button>
 							</Flex>
 						</Box>
 					</Form>

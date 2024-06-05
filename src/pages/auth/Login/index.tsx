@@ -1,19 +1,27 @@
 import TextInput from '@/components/form/TextInput';
 import { LoginFormFieldsEnum } from '@/enums/formData';
+import { APP_ROUTES } from '@/utils/constants';
 import { loginFormFields } from '@/utils/constants/formFields';
 import { loginFormValidationSchema } from '@/validationSchema';
-import { Box, Button, Card, Flex, Heading } from '@radix-ui/themes';
+import { Box, Button, Card, Flex, Heading, Link, Text } from '@radix-ui/themes';
 import { Form, Formik } from 'formik';
 import React, { useMemo } from 'react';
+import { useNavigate } from 'react-router';
 import { ZodError } from 'zod';
 
 const Login: React.FC = () => {
+	const navigate = useNavigate();
+
+	const navigateToRegisterPage = () => {
+		navigate(APP_ROUTES.register);
+	};
 	return (
 		<Box>
 			<Flex
 				justify='center'
 				align='center'
 				minHeight='100vh'
+				direction='column'
 			>
 				<Card>
 					<Box
@@ -30,6 +38,11 @@ const Login: React.FC = () => {
 						<LoginForm />
 					</Box>
 				</Card>
+
+				<Text mt='3'>
+					Don't have a account yet?{' '}
+					<Link onClick={navigateToRegisterPage} className='pointer'>Create a Account</Link>
+				</Text>
 			</Flex>
 		</Box>
 	);

@@ -10,20 +10,22 @@ import {
 } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 
-export const usePostRequest = <T>({
-	url,
-	data,
-	queriesToInvalidate,
-}: {
-	url: string;
-	data: string;
-	queriesToInvalidate?: QueryFilters;
-}): UseMutationResult<T | void> => {
+export const usePostRequest = <T>(queriesToInvalidate?: QueryFilters) => {
 	const queryClient = useQueryClient();
 
 	return useMutation({
-		mutationFn: async () => {
-			return await axiosInstance.post(url, data);
+		mutationFn: async ({
+			url,
+			data,
+		}: {
+			url: string;
+			data: string | FormData;
+		}) => {
+			if (url) {
+				return await axiosInstance.post(url, data);
+			} else {
+				throw new Error('No API Url Provided');
+			}
 		},
 		onMutate: async () => {
 			if (queriesToInvalidate) {

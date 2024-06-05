@@ -86,10 +86,29 @@ export const setAuthDataInLocalStorage = async ({
 export const getAuthDataFromLocalStorage = async () => {
 	try {
 		const userData = await STORAGE.get<IUser>(LOCALSTORAGE_KEYS.userData);
-		const authToken = await STORAGE.get<string>(LOCALSTORAGE_KEYS.userAuthToken);
+		const authToken = await STORAGE.get<string>(
+			LOCALSTORAGE_KEYS.userAuthToken
+		);
 
 		return { userData, authToken };
 	} catch (error) {
+		return null;
+	}
+};
+
+export const formatFormErrorsFromApiResponse = (
+	errors: Record<string, string> | null
+) => {
+	const _errors: Record<string, string> = {};
+	if (errors !== null) {
+		Object.keys(errors).forEach((_key) => {
+			const message = (errors ?? {})[_key];
+			if (message) {
+				_errors[_key] = message;
+			}
+		});
+		return _errors;
+	} else {
 		return null;
 	}
 };

@@ -13,3 +13,10 @@ export enum FormFieldType {
 	email = 'email',
 	password = 'password',
 }
+export enum ReactToastifyTypeEnum {
+	info = 'info',
+	success = 'success',
+	warning = 'warning',
+	error = 'error',
+	default = 'default',
+}
