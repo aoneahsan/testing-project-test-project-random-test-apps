@@ -20,3 +20,10 @@ export enum ReactToastifyTypeEnum {
 	error = 'error',
 	default = 'default',
 }
+
+export enum RequestTypeEnum {
+	get = 'get',
+	post = 'post',
+	put = 'put',
+	delete = 'delete',
+}

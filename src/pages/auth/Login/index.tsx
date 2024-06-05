@@ -1,12 +1,40 @@
+import HandleFormValidationState from '@/components/HandleFormValidationState';
 import TextInput from '@/components/form/TextInput';
 import { LoginFormFieldsEnum } from '@/enums/formData';
-import { APP_ROUTES } from '@/utils/constants';
+import { usePostRequest } from '@/hooks/reactQuery';
+import { formValidationRStateAtom } from '@/state/formState';
+import { userDataRStateAtom } from '@/state/userState';
+import { IApiResponse } from '@/types/backendApi';
+import { IUser } from '@/types/userData';
+import { API_URLS, APP_ROUTES } from '@/utils/constants';
 import { loginFormFields } from '@/utils/constants/formFields';
+import {
+	formatFormErrorsFromApiResponse,
+	setAuthDataInLocalStorage,
+} from '@/utils/helpers';
+import { showToast } from '@/utils/helpers/capacitorApis';
+import {
+	showErrorNotification,
+	showSuccessNotification,
+} from '@/utils/helpers/react-toastify';
+import { MESSAGES } from '@/utils/messages';
 import { loginFormValidationSchema } from '@/validationSchema';
-import { Box, Button, Card, Flex, Heading, Link, Text } from '@radix-ui/themes';
+import { InfoCircledIcon } from '@radix-ui/react-icons';
+import {
+	Box,
+	Button,
+	Callout,
+	Card,
+	Flex,
+	Heading,
+	Link,
+	Switch,
+	Text,
+} from '@radix-ui/themes';
 import { Form, Formik } from 'formik';
 import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { ZodError } from 'zod';
 
 const Login: React.FC = () => {
@@ -41,8 +69,15 @@ const Login: React.FC = () => {
 
 				<Text mt='3'>
 					Don't have a account yet?{' '}
-					<Link onClick={navigateToRegisterPage} className='pointer'>Create a Account</Link>
+					<Link
+						onClick={navigateToRegisterPage}
+						className='pointer'
+					>
+						Create a Account
+					</Link>
 				</Text>
+
+				<HandleFormValidationState />
 			</Flex>
 		</Box>
 	);
@@ -56,21 +91,63 @@ const LoginForm: React.FC = () => {
 		}),
 		[]
 	);
+	const { mutateAsync: loginUser } = usePostRequest();
+	const setUserDataRState = useSetRecoilState(userDataRStateAtom);
+	const formValidationRState = useRecoilValue(formValidationRStateAtom);
 
 	return (
 		<Formik
 			initialValues={initialValues}
 			validate={(values) => {
-				try {
-					loginFormValidationSchema.parse(values);
-				} catch (error) {
-					if (error instanceof ZodError) {
-						return error.formErrors.fieldErrors;
+				if (formValidationRState.frontendFormValidationIsEnabled) {
+					try {
+						loginFormValidationSchema.parse(values);
+					} catch (error) {
+						if (error instanceof ZodError) {
+							showToast(MESSAGES.general.invalidData);
+
+							return error.formErrors.fieldErrors;
+						}
 					}
 				}
 			}}
-			onSubmit={(values) => {
-				console.log({ values });
+			onSubmit={async (values, { setErrors }) => {
+				const reqData = JSON.stringify({
+					email: values[LoginFormFieldsEnum.email],
+					password: values[LoginFormFieldsEnum.password],
+				});
+
+				try {
+					const res = await loginUser({
+						url: API_URLS.login,
+						data: reqData,
+					});
+
+					const resData = JSON.parse(res.data) as IApiResponse<IUser>;
+
+					if (resData.errors) {
+						const _errors = formatFormErrorsFromApiResponse(resData.errors);
+						if (_errors) {
+							showToast(MESSAGES.general.invalidData);
+							setErrors(_errors);
+						}
+					} else {
+						const userData = resData.result?.data;
+						const authToken = resData.result?.authToken;
+
+						if (userData && authToken) {
+							await setAuthDataInLocalStorage({ userData, authToken });
+
+							showSuccessNotification();
+
+							setUserDataRState(userData);
+						} else {
+							showErrorNotification(MESSAGES.backendApi.invalidUserData);
+						}
+					}
+				} catch (error) {
+					showErrorNotification();
+				}
 			}}
 		>
 			{({ values, errors, touched }) => {

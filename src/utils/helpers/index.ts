@@ -78,17 +78,19 @@ export const setAuthDataInLocalStorage = async ({
 		}
 
 		if (authToken) {
-			await STORAGE.set(LOCALSTORAGE_KEYS.userAuthToken, userData);
+			await STORAGE.set(LOCALSTORAGE_KEYS.userAuthToken, authToken);
 		}
 	} catch (error) {}
+};
+
+export const getAuthTokenFromLocalStorage = async () => {
+	return await STORAGE.get<string>(LOCALSTORAGE_KEYS.userAuthToken);
 };
 
 export const getAuthDataFromLocalStorage = async () => {
 	try {
 		const userData = await STORAGE.get<IUser>(LOCALSTORAGE_KEYS.userData);
-		const authToken = await STORAGE.get<string>(
-			LOCALSTORAGE_KEYS.userAuthToken
-		);
+		const authToken = await getAuthTokenFromLocalStorage();
 
 		return { userData, authToken };
 	} catch (error) {

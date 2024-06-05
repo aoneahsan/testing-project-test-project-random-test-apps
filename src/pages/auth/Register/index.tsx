@@ -1,8 +1,10 @@
 import axiosInstance from '@/axiosInstance';
+import HandleFormValidationState from '@/components/HandleFormValidationState';
 import TextInput from '@/components/form/TextInput';
 import { ResponseCodeEnum, ResponseStatusEnum } from '@/enums/backendApi';
 import { RegisterFormFieldsEnum } from '@/enums/formData';
 import { usePostRequest } from '@/hooks/reactQuery';
+import { formValidationRStateAtom } from '@/state/formState';
 import { userDataRStateAtom } from '@/state/userState';
 import { IApiResponse } from '@/types/backendApi';
 import { IUser } from '@/types/userData';
@@ -23,7 +25,7 @@ import { Box, Button, Card, Flex, Heading, Link, Text } from '@radix-ui/themes';
 import { Form, Formik } from 'formik';
 import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { ZodError } from 'zod';
 
 const Register: React.FC = () => {
@@ -64,6 +66,8 @@ const Register: React.FC = () => {
 						Login
 					</Link>
 				</Text>
+
+				<HandleFormValidationState />
 			</Flex>
 		</Box>
 	);
@@ -72,27 +76,30 @@ const Register: React.FC = () => {
 const RegisterForm: React.FC = () => {
 	const initialValues = useMemo(
 		() => ({
-			[RegisterFormFieldsEnum.name]: 'asd',
-			[RegisterFormFieldsEnum.email]: 'asd@asd.asd',
-			[RegisterFormFieldsEnum.password]: 'asdasd',
-			[RegisterFormFieldsEnum.passwordConfirmation]: 'asdasd',
+			[RegisterFormFieldsEnum.name]: '',
+			[RegisterFormFieldsEnum.email]: '',
+			[RegisterFormFieldsEnum.password]: '',
+			[RegisterFormFieldsEnum.passwordConfirmation]: '',
 		}),
 		[]
 	);
-	const { mutateAsync } = usePostRequest();
+	const { mutateAsync: registerUser } = usePostRequest();
 	const setUserDataRState = useSetRecoilState(userDataRStateAtom);
+	const formValidationRState = useRecoilValue(formValidationRStateAtom);
 
 	return (
 		<Formik
 			initialValues={initialValues}
 			validate={(values) => {
-				try {
-					registerFormValidationSchema.parse(values);
-				} catch (error) {
-					if (error instanceof ZodError) {
-						showToast(MESSAGES.general.invalidData);
+				if (formValidationRState.frontendFormValidationIsEnabled) {
+					try {
+						registerFormValidationSchema.parse(values);
+					} catch (error) {
+						if (error instanceof ZodError) {
+							showToast(MESSAGES.general.invalidData);
 
-						return error.formErrors.fieldErrors;
+							return error.formErrors.fieldErrors;
+						}
 					}
 				}
 			}}
@@ -106,7 +113,7 @@ const RegisterForm: React.FC = () => {
 				});
 
 				try {
-					const res = await mutateAsync({
+					const res = await registerUser({
 						url: API_URLS.register,
 						data: reqData,
 					});
@@ -130,13 +137,11 @@ const RegisterForm: React.FC = () => {
 
 							setUserDataRState(userData);
 						} else {
-							showErrorNotification(
-								'Invalid User data found, please try again later!'
-							);
+							showErrorNotification(MESSAGES.backendApi.invalidUserData);
 						}
 					}
 				} catch (error) {
-					console.error(error);
+					showErrorNotification();
 				}
 			}}
 		>

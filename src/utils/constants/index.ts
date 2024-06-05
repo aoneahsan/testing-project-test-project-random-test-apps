@@ -17,5 +17,9 @@ export const APP_ROUTES = {
 	userFeed: '/feed',
 };
 export const API_URLS = {
-	register: '/register'
+	register: '/register',
+	login: '/login',
+	logout: '/logout',
+	getUserData: '/getUserData',
+	updateUserData: '/updateUserData',
 }

@@ -5,4 +5,7 @@ export const MESSAGES = {
 		notFound: 'Not Found!',
 		invalidData: 'Please Enter Valid Data.',
 	},
+	backendApi: {
+		invalidUserData: 'Invalid User data found, please try again later!',
+	},
 };
