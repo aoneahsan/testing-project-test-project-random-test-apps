@@ -8,4 +8,5 @@ enum ResponseCodeEnum: string
   case badRequest = 'badRequest';
   case serverError = 'serverError';
   case success = 'success';
+  case itemExists = 'itemExists';
 }

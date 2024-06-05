@@ -34,9 +34,9 @@ class AppHelper
     return AppHelper::sendRequestFailedResponse($message, $errors, 404, ResponseCodeEnum::notFound);
   }
 
-  static function sendBadRequestResponse(mixed $errors = null, string $message = 'Bad Request!')
+  static function sendBadRequestResponse(mixed $errors = null, string $message = 'Bad Request!', ResponseCodeEnum $code = ResponseCodeEnum::badRequest)
   {
-    return AppHelper::sendRequestFailedResponse($message, $errors, 400, ResponseCodeEnum::badRequest);
+    return AppHelper::sendRequestFailedResponse($message, $errors, 400, $code);
   }
 
   static function sendSuccessResponse(mixed $result = null, string $message = 'Request Completed Successfully!', int $status = 200)

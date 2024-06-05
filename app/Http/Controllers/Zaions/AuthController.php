@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Zaions;
 
+use App\Enums\ResponseCodeEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Zaions\UserResource;
 use App\Models\User;
@@ -19,32 +20,65 @@ class AuthController extends Controller
             'password' => 'required|min:6|max:30' // as we have set this in frontend as well
         ]);
 
-        $email = $request->get('email');
-        $user = User::where('email', '=', $email)->first();
-        if (!$user) {
-            return AppHelper::sendNotFoundResponse([
-                'email' => 'No User Found with provided details.'
-            ]);
-        } else {
-            $password = $request->get('password');
-            $passwordMatched = Hash::check($password, $user->password);
-
-            if ($passwordMatched) {
-                $userResource = UserResource::make($user);
-                $authToken = $user->createToken('authToken');
-                $authTokenCode = $authToken->plainTextToken;
-                return AppHelper::sendSuccessResponse(['data' => $userResource, 'authToken' => $authTokenCode]);
+        try {
+            $email = $request->get('email');
+            $user = User::where('email', '=', $email)->first();
+            if (!$user) {
+                return AppHelper::sendNotFoundResponse([
+                    'email' => 'No User Found with provided details.'
+                ]);
             } else {
-                // in case we do not want to tell user (in frontend), that a actual user exists in database with given email and only the password is invalid, then we can just send back "Not Found Response", it depends on business logic/requirements
-                // here i'm sending back correct error messages based on the app/request state
-                return AppHelper::sendBadRequestResponse(['password' => 'Invalid details!']);
+                $password = $request->get('password');
+                $passwordMatched = Hash::check($password, $user->password);
+
+                if ($passwordMatched) {
+                    $userResource = UserResource::make($user);
+                    $authToken = $user->createToken('authToken');
+                    $authTokenCode = $authToken->plainTextToken;
+                    return AppHelper::sendSuccessResponse(['data' => $userResource, 'authToken' => $authTokenCode]);
+                } else {
+                    // in case we do not want to tell user (in frontend), that a actual user exists in database with given email and only the password is invalid, then we can just send back "Not Found Response", it depends on business logic/requirements
+                    // here i'm sending back correct error messages based on the app/request state
+                    return AppHelper::sendBadRequestResponse(['password' => 'Invalid details!']);
+                }
             }
+        } catch (\Throwable $th) {
+            return AppHelper::sendRequestFailedResponse();
         }
     }
 
     function register(Request $request)
     {
-        return response()->json(['success' => true]);
+        $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|email',
+            'password' => 'required|min:6|max:30|confirmed'
+        ]);
+
+        try {
+            $email = $request->get('email');
+            $user = User::where('email', '=', $email)->first();
+            if ($user) {
+                return AppHelper::sendBadRequestResponse([
+                    'email' => 'User Already Exists!'
+                ], 'User Already Exists', ResponseCodeEnum::itemExists);
+            } else {
+                $password = $request->get('password');
+                $passwordHash = Hash::make($password);
+
+                $user = User::create([
+                    'name' => $request->get('name'),
+                    'email' =>  $email,
+                    'password' => $passwordHash
+                ]);
+                $userResource = UserResource::make($user);
+                $authToken = $user->createToken('authToken');
+                $authTokenCode = $authToken->plainTextToken;
+                return AppHelper::sendSuccessResponse(['data' => $userResource, 'authToken' => $authTokenCode], 'Request Completed Successfully!', 201);
+            }
+        } catch (\Throwable $th) {
+            return AppHelper::sendRequestFailedResponse();
+        }
     }
 
     function logout(Request $request)
@@ -52,9 +86,9 @@ class AuthController extends Controller
         try {
             $user = $request->user();
             $user->tokens()->delete();
-            return response()->json(['success' => true]);
+            return AppHelper::sendSuccessResponse();
         } catch (\Throwable $th) {
-            return response()->json(['success' => false]);
+            return AppHelper::sendRequestFailedResponse();
         }
     }
 }
