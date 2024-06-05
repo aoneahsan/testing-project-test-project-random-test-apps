@@ -104,8 +104,6 @@ const LoginForm: React.FC = () => {
 						loginFormValidationSchema.parse(values);
 					} catch (error) {
 						if (error instanceof ZodError) {
-							showToast(MESSAGES.general.invalidData);
-
 							return error.formErrors.fieldErrors;
 						}
 					}

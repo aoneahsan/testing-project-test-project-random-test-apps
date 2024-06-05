@@ -44,19 +44,26 @@ const AuthenticationHOC: React.FC<{
 	}, []);
 
 	useEffect(() => {
-		if (!isFetching && !isError && response && response.data) {
-			try {
-				const _res = JSON.parse(response.data) as IApiResponse<IUser>;
-				const userData = _res.result?.data;
+		if (!isFetching && !isError) {
+			if (response && response.data) {
+				try {
+					const _res = JSON.parse(response.data) as IApiResponse<IUser>;
+					const userData = _res.result?.data;
 
-				if (userData) {
-					setUserDataRState(userData);
+					if (userData) {
+						setUserDataRState(userData);
+					}
+					setCompState((oldState) => ({
+						...oldState,
+						processing: false,
+					}));
+				} catch (error) {
+					setCompState((oldState) => ({
+						...oldState,
+						processing: false,
+					}));
 				}
-				setCompState((oldState) => ({
-					...oldState,
-					processing: false,
-				}));
-			} catch (error) {
+			} else {
 				setCompState((oldState) => ({
 					...oldState,
 					processing: false,
