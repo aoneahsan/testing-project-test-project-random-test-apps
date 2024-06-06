@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Zaions\AuthController;
+use App\Http\Controllers\Zaions\NewsArticleController;
 use App\Http\Controllers\Zaions\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,5 +16,12 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/getUserData', 'getUserData');
         Route::put('/updateUserData', 'updateUserData');
         Route::post('/updateUserStatus', 'updateUserStatus');
+    });
+
+    // /searchNewsArticles
+    // /getNewsFeed
+    Route::controller(NewsArticleController::class)->group(function () {
+        Route::get('/searchNewsArticles', 'searchNewsArticles');
+        Route::get('/getNewsFeed', 'getNewsFeed');
     });
 });

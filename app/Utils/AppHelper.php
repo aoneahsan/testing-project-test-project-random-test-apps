@@ -43,4 +43,9 @@ class AppHelper
   {
     return AppHelper::sendResponse($message, $result, null, $status, ResponseCodeEnum::success, true);
   }
+
+  static function getDateFormat(): string
+  {
+    return 'Y-m-d';
+  }
 }
