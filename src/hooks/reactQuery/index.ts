@@ -76,6 +76,7 @@ const useMutationRequest = (
 				await queryClient.invalidateQueries(queriesToInvalidate);
 			}
 		},
+		throwOnError: true,
 	});
 
 	const _status = _mutation.data?.status;
@@ -130,6 +131,8 @@ export const useGetRequest = (
 		},
 		refetchOnReconnect: true,
 		refetchOnWindowFocus: true,
+		throwOnError: true,
+		retry: 2,
 	});
 
 	const _status = _query.data?.status;

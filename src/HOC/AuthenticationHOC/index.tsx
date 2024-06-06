@@ -3,18 +3,18 @@ import { userDataRStateAtom } from '@/state/userState';
 import { getAuthDataFromLocalStorage } from '@/utils/helpers';
 import React, { ReactNode, useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
-import { Navigate } from 'react-router-dom';
+import { matchRoutes, useNavigate } from 'react-router-dom';
 import { API_URLS, APP_ROUTES } from '@/utils/constants';
 import { useGetRequest, usePostRequest } from '@/hooks/reactQuery';
 import ErrorBoundary from '@/components/errors/ErrorBoundary';
 import { MESSAGES } from '@/utils/messages';
 import { IApiResponse } from '@/types/backendApi';
 import { IUser } from '@/types/userData';
+import { useLocation } from 'react-router';
 
 const AuthenticationHOC: React.FC<{
 	children: ReactNode;
-	isAuthenticatedView: boolean;
-}> = ({ children, isAuthenticatedView }) => {
+}> = ({ children }) => {
 	const [compState, setCompState] = useState<{ processing: boolean }>({
 		processing: true,
 	});
@@ -26,6 +26,13 @@ const AuthenticationHOC: React.FC<{
 		isFetching,
 		isError,
 	} = useGetRequest(API_URLS.getUserData);
+	const navigate = useNavigate();
+	const location = useLocation();
+	const rootRouteMatched = matchRoutes(
+		[{ path: APP_ROUTES.rootRoute }],
+		location
+	);
+	const isRootRoute = rootRouteMatched && rootRouteMatched?.length > 0;
 
 	useEffect(() => {
 		try {
@@ -50,8 +57,12 @@ const AuthenticationHOC: React.FC<{
 					const _res = JSON.parse(response.data) as IApiResponse<IUser>;
 					const userData = _res.result?.data;
 
-					if (userData) {
+					if (userData && userData.id) {
 						setUserDataRState(userData);
+
+						if (isRootRoute) {
+							navigate(APP_ROUTES.home);
+						}
 					}
 					setCompState((oldState) => ({
 						...oldState,
@@ -64,30 +75,24 @@ const AuthenticationHOC: React.FC<{
 					}));
 				}
 			} else {
+				setUserDataRState(null);
+
 				setCompState((oldState) => ({
 					...oldState,
 					processing: false,
 				}));
+
+				if (isRootRoute) {
+					navigate(APP_ROUTES.login);
+				}
 			}
 		}
-	}, [response, isFetching, isError]);
+	}, [response, isFetching, isError, isRootRoute]);
 
 	if (compState.processing || isFetching) {
 		return <FullPageLoader />;
 	} else if (!compState.processing && !isError) {
-		if (isAuthenticatedView) {
-			if (userDataRState?.email) {
-				return children;
-			} else {
-				return <Navigate to={APP_ROUTES.login} />;
-			}
-		} else {
-			if (userDataRState?.email) {
-				return <Navigate to={APP_ROUTES.home} />;
-			} else {
-				return children;
-			}
-		}
+		return children;
 	} else {
 		return <ErrorBoundary message={MESSAGES.errors.authCheckFailed} />;
 	}

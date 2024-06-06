@@ -12,7 +12,8 @@ export const React_QUERY_KEYS = {
 
 export const APP_ROUTES = {
 	wildCard: '*',
-	home: '/',
+	rootRoute: '/',
+	home: '/news-articles',
 	register: '/register',
 	login: '/login',
 	userFeed: '/feed',

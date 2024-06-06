@@ -6,13 +6,13 @@ export const userDataRStateAtom = atom<IUser | null>({
 	default: null,
 });
 
-export const userIsAuthenticated = selector<boolean>({
+export const userIsAuthenticatedRStateSelector = selector<boolean>({
 	key: 'userIsAuthenticated_key',
 	get: ({ get }) => {
 		try {
 			const userData = get(userDataRStateAtom);
 
-			if (userData?.email) {
+			if (userData && userData.id && userData?.email) {
 				return true;
 			}
 

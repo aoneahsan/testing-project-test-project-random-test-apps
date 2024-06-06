@@ -5,55 +5,66 @@ import Home from './pages/Home';
 import { APP_ROUTES } from './utils/constants';
 import Login from './pages/auth/Login';
 import UserFeed from './pages/UserFeed';
-import AuthenticationHOC from './HOC/AuthenticationHOC';
 import NotFound from './pages/NotFound';
 import MyAccount from './pages/MyAccount';
+import MainAppLayout from './layout/MainAppLayout';
+import RouteGuardHOC from './HOC/RouteGuardHOC';
 
 export const appRouter = createBrowserRouter([
 	{
-		element: (
-			<AuthenticationHOC isAuthenticatedView>
-				<Home />
-			</AuthenticationHOC>
-		),
-		path: APP_ROUTES.home,
+		path: APP_ROUTES.rootRoute,
+		element: <MainAppLayout />,
 		errorElement: <ErrorBoundary />,
-	},
-	{
-		element: (
-			<AuthenticationHOC isAuthenticatedView={false}>
-				<Register />
-			</AuthenticationHOC>
-		),
-		path: APP_ROUTES.register,
-		errorElement: <ErrorBoundary />,
-	},
-	{
-		element: (
-			<AuthenticationHOC isAuthenticatedView={false}>
-				<Login />
-			</AuthenticationHOC>
-		),
-		path: APP_ROUTES.login,
-		errorElement: <ErrorBoundary />,
-	},
-	{
-		element: (
-			<AuthenticationHOC isAuthenticatedView>
-				<UserFeed />
-			</AuthenticationHOC>
-		),
-		path: APP_ROUTES.userFeed,
-		errorElement: <ErrorBoundary />,
-	},
-	{
-		element: (
-			<AuthenticationHOC isAuthenticatedView>
-				<MyAccount />
-			</AuthenticationHOC>
-		),
-		path: APP_ROUTES.myAccount,
-		errorElement: <ErrorBoundary />,
+		children: [
+			// UnAuthenticated Routes
+			{
+				element: (
+					<RouteGuardHOC isAuthenticatedView={false}>
+						<Register />
+					</RouteGuardHOC>
+				),
+				path: APP_ROUTES.register,
+				errorElement: <ErrorBoundary />,
+			},
+			{
+				element: (
+					<RouteGuardHOC isAuthenticatedView={false}>
+						<Login />
+					</RouteGuardHOC>
+				),
+				path: APP_ROUTES.login,
+				errorElement: <ErrorBoundary />,
+			},
+
+			// Authenticated Routes
+			{
+				element: (
+					<RouteGuardHOC isAuthenticatedView>
+						<Home />
+					</RouteGuardHOC>
+				),
+				path: APP_ROUTES.home,
+				errorElement: <ErrorBoundary />,
+			},
+			{
+				element: (
+					<RouteGuardHOC isAuthenticatedView>
+						<UserFeed />
+					</RouteGuardHOC>
+				),
+				path: APP_ROUTES.userFeed,
+				errorElement: <ErrorBoundary />,
+			},
+			{
+				element: (
+					<RouteGuardHOC isAuthenticatedView>
+						<MyAccount />
+					</RouteGuardHOC>
+				),
+				path: APP_ROUTES.myAccount,
+				errorElement: <ErrorBoundary />,
+			},
+		],
 	},
 	{
 		element: <NotFound />,

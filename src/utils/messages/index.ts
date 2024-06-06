@@ -12,4 +12,8 @@ export const MESSAGES = {
 		unAuthenticated: 'UnAuthenticated, please login again.',
 		authCheckFailed: 'Error Ocurred while checking the user auth state.',
 	},
+	network: {
+		disconnected:
+			'Network Disconnected, please check your internet connection and try again.',
+	},
 };
