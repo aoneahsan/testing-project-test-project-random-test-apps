@@ -6,20 +6,16 @@ use App\Http\Controllers\Controller;
 use App\Utils\AppHelper;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
-use GuzzleHttp\Promise\Promise;
 use GuzzleHttp\Promise\Utils;
 use Illuminate\Http\Request;
-use Mockery\Undefined;
 
 class NewsArticleController extends Controller
 {
     private $client;
-    private $promise;
 
-    public function __construct(Client $client, Promise $promise)
+    public function __construct(Client $client)
     {
         $this->client = $client;
-        $this->promise = $promise;
     }
 
     function searchNewsArticles(Request $request)
@@ -102,52 +98,6 @@ class NewsArticleController extends Controller
                 'pageSize' => $pageSize
             ]
         ]);
-    }
-
-
-
-
-
-
-
-    function fetchArticlesFromNewsApiAiBackup($keyword, $category, $source, $page, $pageSize, $startDate, $endDate)
-    {
-        $res = $this->client->get('https://eventregistry.org/api/v1/article/getArticles', [
-            'headers' => AppHelper::getApiRequestHeaders(),
-            'query' => [
-                'apiKey' => env('NEWS_API_AI_APP_KEY'),
-                'resultType' => 'articles',
-                'forceMaxDataTimeWindow' => 31,
-                'lang' => 'eng',
-                'keyword' => $keyword,
-                'dateStart' => $startDate,
-                'dateEnd' => $endDate,
-                'categoryUri' => $category,
-                'sourceUri' => $source,
-                'articlesPage' => $page,
-                'articlesCount' => $pageSize
-            ]
-        ]);
-
-        return json_decode($res->getBody()->getContents());
-    }
-    function fetchArticlesFromNewsApiOrgBackup($keyword = '', $source = '', $page = 1, $pageSize = 10, $startDate = null, $endDate = null)
-    {
-        $res = $this->client->get('https://newsapi.org/v2/everything', [
-            'headers' => AppHelper::getApiRequestHeaders(),
-            'query' => [
-                'q' => strlen($keyword) > 0 ? $keyword : 'news', // required by the API
-                'apiKey' => env('NEWS_API_ORG_APP_KEY'),
-                'sources' => $source,
-                'language' => 'en',
-                'from' => $startDate ?? Carbon::now()->subDays(31)->format(AppHelper::getDateFormat()),
-                'to' => $endDate ?? Carbon::now()->format(AppHelper::getDateFormat()),
-                'page' => $page,
-                'pageSize' => $pageSize
-            ]
-        ]);
-
-        return json_decode($res->getBody()->getContents());
     }
 }
 
