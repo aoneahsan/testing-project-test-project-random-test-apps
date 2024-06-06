@@ -48,4 +48,12 @@ class AppHelper
   {
     return 'Y-m-d';
   }
+
+  static function getApiRequestHeaders()
+  {
+    return [
+      'Accept' => 'application/json',
+      'Content-Type' => 'application/json',
+    ];
+  }
 }
