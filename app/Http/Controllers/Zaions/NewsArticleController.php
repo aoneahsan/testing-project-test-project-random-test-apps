@@ -43,16 +43,27 @@ class NewsArticleController extends Controller
             }
         }
 
-        $promises = [
-            'articlesFromNewsApiAi' => $this->fetchArticlesFromNewsApiAi($keyword, $category, $source, $page, $pageSize, $startDate, $endDate),
-            'articlesFromNewsApiOrg' => $this->fetchArticlesFromNewsApiOrg($keyword, $source, $page, $pageSize, $startDate, $endDate),
-            'articlesFromTheGuardianApi' => $this->fetchArticlesFromTheGuardianApi($keyword, $category, $page, $pageSize, $startDate, $endDate),
-        ];
-        $responses = Utils::unwrap($promises);
 
-        $articlesFromNewsApiAi = json_decode($responses['articlesFromNewsApiAi']->getBody()->getContents());
-        $articlesFromNewsApiOrg = json_decode($responses['articlesFromNewsApiOrg']->getBody()->getContents());
-        $articlesFromTheGuardianApi = json_decode($responses['articlesFromTheGuardianApi']->getBody()->getContents());
+        // implementing it like this, so if one of these api fails then we will have data from at least some other API
+        // this will increase the API execution time, but at least we will have some data to display in frontend
+        // i did implemented the "GuzzleHttp\Promise" way here before, and it was fast, as i was calling all apis at the same time "async way, parallel api calls" but that way if one fails the whole API request fails even if all other API requests succeed.
+        $articlesFromNewsApiAi = null;
+        try {
+            $articlesFromNewsApiAi = $this->fetchArticlesFromNewsApiAi($keyword, $category, $source, $page, $pageSize, $startDate, $endDate);
+        } catch (\Throwable $th) {
+        }
+
+        $articlesFromNewsApiOrg = null;
+        try {
+            $articlesFromNewsApiOrg = $this->fetchArticlesFromNewsApiOrg($keyword, $source, $page, $pageSize, $startDate, $endDate);
+        } catch (\Throwable $th) {
+        }
+
+        $articlesFromTheGuardianApi = null;
+        try {
+            $articlesFromTheGuardianApi = $this->fetchArticlesFromTheGuardianApi($keyword, $category, $page, $pageSize, $startDate, $endDate);
+        } catch (\Throwable $th) {
+        }
 
         return AppHelper::sendSuccessResponse([
             'articlesFromNewsApiAi' => $articlesFromNewsApiAi,
@@ -93,10 +104,12 @@ class NewsArticleController extends Controller
             $query['sourceUri'] = $source;
         }
 
-        return $this->client->getAsync('https://eventregistry.org/api/v1/article/getArticles', [
+        $res = $this->client->get('https://eventregistry.org/api/v1/article/getArticles', [
             'headers' => AppHelper::getApiRequestHeaders(),
             'query' => $query
         ]);
+
+        return json_decode($res->getBody()->getContents());
     }
 
     function fetchArticlesFromNewsApiOrg($keyword = '', $source = '', $page = 1, $pageSize = 10, $startDate = null, $endDate = null)
@@ -121,10 +134,12 @@ class NewsArticleController extends Controller
             $query['sources'] = $source;
         }
 
-        return $this->client->getAsync('https://newsapi.org/v2/everything', [
+        $res = $this->client->get('https://newsapi.org/v2/everything', [
             'headers' => AppHelper::getApiRequestHeaders(),
             'query' => $query
         ]);
+
+        return json_decode($res->getBody()->getContents());
     }
 
     function fetchArticlesFromTheGuardianApi($keyword = '', $category = '', $page = 1, $pageSize = 10, $startDate = null, $endDate = null)
@@ -155,10 +170,12 @@ class NewsArticleController extends Controller
             $query['section'] = $category;
         }
 
-        return $this->client->getAsync('https://content.guardianapis.com/search', [
+        $res = $this->client->get('https://content.guardianapis.com/search', [
             'headers' => AppHelper::getApiRequestHeaders(),
             'query' => $query
         ]);
+
+        return json_decode($res->getBody()->getContents());
     }
 }
 
