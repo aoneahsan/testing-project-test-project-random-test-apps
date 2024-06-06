@@ -8,6 +8,8 @@ import { useRecoilValue } from 'recoil';
 import { userIsAuthenticatedRStateSelector } from '@/state/userState';
 import { formatRoutesMatchResult } from '@/utils/helpers';
 import { Link } from 'react-router-dom';
+import { useMediaQuery } from 'react-responsive';
+import { useMemo } from 'react';
 
 const Header: React.FC = () => {
 	const location = useLocation();
@@ -34,6 +36,22 @@ const Header: React.FC = () => {
 	const userIsAuthenticatedRState = useRecoilValue(
 		userIsAuthenticatedRStateSelector
 	);
+	const links = useMemo(() => {
+		return [
+			{
+				path: APP_ROUTES.home,
+				isAuthenticated: true,
+				label: 'Search Articles',
+			},
+		];
+	}, []);
+
+	const isTablet = useMediaQuery({
+		query: '(max-width: 900px)',
+	});
+	const isMobile = useMediaQuery({
+		query: '(max-width: 700px)',
+	});
 
 	return (
 		<>
