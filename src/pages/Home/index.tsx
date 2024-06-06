@@ -1,22 +1,38 @@
-import LogoutButton from '@/components/LogoutButton';
-import { APP_ROUTES } from '@/utils/constants';
-import { Button } from '@radix-ui/themes';
-import { useNavigate } from 'react-router';
+import DatePicker from 'react-datepicker';
+import { useState } from 'react';
+import dayjs from 'dayjs';
 
 const Home: React.FC = () => {
-	const navigate = useNavigate();
+	const [date, setDate] = useState<string>(
+		dayjs(new Date()).format('YYYY-MM-DD')
+	);
+
+	console.log({ formattedDate: dayjs(date).format('YYYY-MM-DD') });
 
 	return (
 		<>
 			<h1>home</h1>
-			<Button
-				onClick={() => {
-					navigate(APP_ROUTES.myAccount);
+
+			<br />
+
+			<DatePicker
+				selected={new Date(date)}
+				onChange={(val) => {
+					if (val) {
+						setDate(dayjs(val).format('YYYY-MM-DD'));
+					}
 				}}
-			>
-				My Account
-			</Button>
-			<LogoutButton />
+				dateFormat='YYYY-MM-dd'
+			/>
+			<br />
+
+			<input
+				type='date'
+				value={date?.toString()}
+				onChange={(e) => {
+					setDate(dayjs(new Date(e?.target?.value)).format('YYYY-MM-DD'));
+				}}
+			/>
 		</>
 	);
 };

@@ -41,7 +41,9 @@ const Footer: React.FC = () => {
 						align='center'
 						direction={isMobile ? 'column' : 'row'}
 					>
-						<Text align={isMobile ? 'center' : 'left'}>All rights reserved © {new Date().getFullYear()}</Text>
+						<Text align={isMobile ? 'center' : 'left'}>
+							All rights reserved © {new Date().getFullYear()}
+						</Text>
 						<Text align={isMobile ? 'center' : 'left'}>
 							Developed by{' '}
 							<Link
@@ -56,16 +58,17 @@ const Footer: React.FC = () => {
 					<Flex
 						justify='center'
 						align='center'
-						mt={isMobile ? '2': '1'}
+						mt={isMobile ? '2' : '1'}
 						wrap='wrap'
 					>
-						{links.map((el) => {
+						{links.map((el, index) => {
 							return (
 								<Button
 									size='1'
 									asChild
 									mr='2'
-									mb={isMobile ? '2': '0'}
+									mb={isMobile ? '2' : '0'}
+									key={`${el.label}-${index}`}
 								>
 									<Link
 										href={el.url}
