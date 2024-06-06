@@ -5,7 +5,7 @@ import { clearAuthDataFromLocalStorage } from '@/utils/helpers';
 import {
 	showErrorNotification,
 	showSuccessNotification,
-} from '@/utils/helpers/react-toastify';
+} from '@/utils/helpers/reactToastify';
 import { Button } from '@radix-ui/themes';
 import { useSetRecoilState } from 'recoil';
 import { useMediaQuery } from 'react-responsive';

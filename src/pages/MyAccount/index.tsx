@@ -15,7 +15,7 @@ import { showToast } from '@/utils/helpers/capacitorApis';
 import {
 	showErrorNotification,
 	showSuccessNotification,
-} from '@/utils/helpers/react-toastify';
+} from '@/utils/helpers/reactToastify';
 import { MESSAGES } from '@/utils/messages';
 import { userAccountFormValidationSchema } from '@/validationSchema';
 import { Box, Button, Card, Flex, Heading } from '@radix-ui/themes';

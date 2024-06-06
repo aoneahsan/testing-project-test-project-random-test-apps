@@ -16,7 +16,7 @@ import { showToast } from '@/utils/helpers/capacitorApis';
 import {
 	showErrorNotification,
 	showSuccessNotification,
-} from '@/utils/helpers/react-toastify';
+} from '@/utils/helpers/reactToastify';
 import { MESSAGES } from '@/utils/messages';
 import { loginFormValidationSchema } from '@/validationSchema';
 import { InfoCircledIcon } from '@radix-ui/react-icons';

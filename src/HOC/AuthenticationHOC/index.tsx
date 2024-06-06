@@ -2,7 +2,7 @@ import FullPageLoader from '@/components/FullPageLoader';
 import { userDataRStateAtom } from '@/state/userState';
 import { getAuthDataFromLocalStorage } from '@/utils/helpers';
 import React, { ReactNode, useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import { matchRoutes, useNavigate } from 'react-router-dom';
 import { API_URLS, APP_ROUTES } from '@/utils/constants';
 import { useGetRequest, usePostRequest } from '@/hooks/reactQuery';
@@ -11,6 +11,7 @@ import { MESSAGES } from '@/utils/messages';
 import { IApiResponse } from '@/types/backendApi';
 import { IUser } from '@/types/userData';
 import { useLocation } from 'react-router';
+import { ReactQueryKeyEnum } from '@/enums/reactQuery';
 
 const AuthenticationHOC: React.FC<{
 	children: ReactNode;
@@ -18,14 +19,13 @@ const AuthenticationHOC: React.FC<{
 	const [compState, setCompState] = useState<{ processing: boolean }>({
 		processing: true,
 	});
-	const [userDataRState, setUserDataRState] =
-		useRecoilState(userDataRStateAtom);
+	const setUserDataRState = useSetRecoilState(userDataRStateAtom);
 	const { mutateAsync: updateUserStatus } = usePostRequest();
 	const {
 		data: response,
 		isFetching,
 		isError,
-	} = useGetRequest(API_URLS.getUserData);
+	} = useGetRequest(API_URLS.getUserData, ReactQueryKeyEnum.getUserData);
 	const navigate = useNavigate();
 	const location = useLocation();
 	const rootRouteMatched = matchRoutes(

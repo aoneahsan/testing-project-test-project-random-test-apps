@@ -1,11 +1,13 @@
 import axiosInstance from '@/axiosInstance';
 import { RequestTypeEnum } from '@/enums';
 import { ResponseStatusEnum } from '@/enums/backendApi';
+import { ReactQueryKeyEnum } from '@/enums/reactQuery';
 import { userDataRStateAtom } from '@/state/userState';
 import {
 	clearAuthDataFromLocalStorage,
 	getAuthTokenFromLocalStorage,
 } from '@/utils/helpers';
+import { getReactQueryKey } from '@/utils/helpers/reactQuery';
 import { MESSAGES } from '@/utils/messages';
 import { reportError } from '@/utils/reportError';
 import {
@@ -14,7 +16,7 @@ import {
 	useQuery,
 	useQueryClient,
 } from '@tanstack/react-query';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 
 const useMutationRequest = (
 	method: RequestTypeEnum = RequestTypeEnum.post,
@@ -101,12 +103,16 @@ export const useDeleteRequest = (queriesToInvalidate?: QueryFilters) => {
 
 export const useGetRequest = (
 	url: string,
+	_queryKey: ReactQueryKeyEnum,
 	isAuthenticatedRequest: boolean = true
 ) => {
-	const setUserDataRState = useSetRecoilState(userDataRStateAtom);
+	const [userDataRState, setUserDataRState] =
+		useRecoilState(userDataRStateAtom);
+
+	const queryKey = getReactQueryKey(_queryKey, userDataRState);
 
 	const _query = useQuery({
-		queryKey: [],
+		queryKey,
 		queryFn: async () => {
 			let authToken: string | null = null;
 			const headers: Record<string, string> = {};

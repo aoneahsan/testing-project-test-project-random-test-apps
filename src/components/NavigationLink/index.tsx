@@ -42,7 +42,10 @@ const NavigationLink: React.FC<INavigationLinkProps> = ({
 	const currentActiveRoute = routesMatch && routesMatch[0].pathname;
 	const isCurrentPathActive = currentActiveRoute === path;
 
-	if (userIsAuthenticatedRState && !isAuthenticated) {
+	if (
+		(!userIsAuthenticatedRState && isAuthenticated) ||
+		(userIsAuthenticatedRState && !isAuthenticated)
+	) {
 		return null;
 	} else {
 		return (
