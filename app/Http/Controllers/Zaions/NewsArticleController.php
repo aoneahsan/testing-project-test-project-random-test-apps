@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Utils\AppHelper;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
-use GuzzleHttp\Promise\Utils;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class NewsArticleController extends Controller
 {
@@ -24,6 +24,7 @@ class NewsArticleController extends Controller
         $keyword = isset($queryParams['keyword']) ? $queryParams['keyword'] : null;
         $category = isset($queryParams['category']) ? $queryParams['category'] : null;
         $source = isset($queryParams['source']) ? $queryParams['source'] : null;
+        $author = isset($queryParams['author']) ? $queryParams['author'] : null;
         $page = isset($queryParams['page']) ? $queryParams['page'] : 1;
         $pageSize = isset($queryParams['pageSize']) ? $queryParams['pageSize'] : 10;
 
@@ -43,13 +44,12 @@ class NewsArticleController extends Controller
             }
         }
 
-
         // implementing it like this, so if one of these api fails then we will have data from at least some other API
         // this will increase the API execution time, but at least we will have some data to display in frontend
         // i did implemented the "GuzzleHttp\Promise" way here before, and it was fast, as i was calling all apis at the same time "async way, parallel api calls" but that way if one fails the whole API request fails even if all other API requests succeed.
         $articlesFromNewsApiAi = null;
         try {
-            $articlesFromNewsApiAi = $this->fetchArticlesFromNewsApiAi($keyword, $category, $source, $page, $pageSize, $startDate, $endDate);
+            $articlesFromNewsApiAi = $this->fetchArticlesFromNewsApiAi($keyword, $category, $source, $author, $page, $pageSize, $startDate, $endDate);
         } catch (\Throwable $th) {
         }
 
@@ -79,12 +79,47 @@ class NewsArticleController extends Controller
         ]);
     }
 
-    function getNewsFeed()
+    function getNewsFeed(Request $request)
     {
-        return AppHelper::sendSuccessResponse();
+        $user = $request->user();
+
+        $newsSource = $user->newsSource;
+        $newsCategory = $user->newsCategory;
+        $newsAuthor = $user->newsAuthor;
+
+        $articlesFromNewsApiAi = null;
+        try {
+            $articlesFromNewsApiAi = $this->fetchArticlesFromNewsApiAi(null, $newsCategory, $newsSource, $newsAuthor);
+        } catch (\Throwable $th) {
+        }
+
+        $articlesFromNewsApiOrg = null;
+        try {
+            $articlesFromNewsApiOrg = $this->fetchArticlesFromNewsApiOrg(null, null);
+        } catch (\Throwable $th) {
+        }
+
+        $articlesFromTheGuardianApi = null;
+        try {
+            $articlesFromTheGuardianApi = $this->fetchArticlesFromTheGuardianApi(null, $newsCategory);
+        } catch (\Throwable $th) {
+        }
+
+        $articlesFromNYTimesApi = null;
+        try {
+            $articlesFromNYTimesApi = $this->fetchArticlesFromNYTimesApi(null);
+        } catch (\Throwable $th) {
+        }
+
+        return AppHelper::sendSuccessResponse([
+            'articlesFromNewsApiAi' => $articlesFromNewsApiAi,
+            'articlesFromNewsApiOrg' => $articlesFromNewsApiOrg,
+            'articlesFromNYTimesApi' => $articlesFromNYTimesApi,
+            'articlesFromTheGuardianApi' => $articlesFromTheGuardianApi
+        ]);
     }
 
-    function fetchArticlesFromNewsApiAi($keyword = '', $category = '', $source = '', $page = 1, $pageSize = 10, $startDate = null, $endDate = null)
+    function fetchArticlesFromNewsApiAi($keyword = '', $category = '', $source = '', $authorUri = '', $page = 1, $pageSize = 10, $startDate = null, $endDate = null)
     {
         $query = [
             'apiKey' => env('NEWS_API_AI_APP_KEY'),
@@ -110,6 +145,9 @@ class NewsArticleController extends Controller
         if (strlen($source) > 0) {
             $query['sourceUri'] = $source;
         }
+        if (strlen($authorUri) > 0) {
+            $query['authorUri'] = $authorUri;
+        }
 
         $res = $this->client->get('https://eventregistry.org/api/v1/article/getArticles', [
             'headers' => AppHelper::getApiRequestHeaders(),
@@ -121,15 +159,21 @@ class NewsArticleController extends Controller
 
     function fetchArticlesFromNewsApiOrg($keyword = '', $source = '', $page = 1, $pageSize = 10, $startDate = null, $endDate = null)
     {
+
         $query = [
             'apiKey' => env('NEWS_API_ORG_APP_KEY'),
             'language' => 'en',
             'page' => $page,
-            'pageSize' => $pageSize
+            'pageSize' => $pageSize,
+            'searchIn' => 'title,content'
         ];
 
-        if (strlen($keyword) > 0) {
+        if ($keyword && strlen($keyword) > 0) {
             $query['q'] = $keyword;
+        } else {
+            // we need to pass something for parameter "q" for this API.
+            $user = Auth::user();
+            $query['q'] = $user->newsSource . ' OR ' . $user->newsCategory . ' OR ' . $user->newsAuthor . ' OR ' . 'news';
         }
         if ($startDate) {
             $query['from'] = $startDate;
@@ -137,7 +181,7 @@ class NewsArticleController extends Controller
         if ($endDate) {
             $query['to'] = $endDate;
         }
-        if (strlen($source) > 0) {
+        if ($source && strlen($source) > 0) {
             $query['sources'] = $source;
         }
 
@@ -194,7 +238,8 @@ class NewsArticleController extends Controller
             'sort' => 'relevance',
             'page' => $page,
             'page-size' => $pageSize,
-            'fl' => 'abstract,web_url,lead_paragraph,source,multimedia,headline,section_name,byline'
+            // 'fl' => 'abstract,web_url,lead_paragraph,source,multimedia,headline,section_name,byline',
+            'fl' => 'abstract,web_url,lead_paragraph,source,headline,section_name', // not fetching the 'multimedia' and 'byline' as these two fields return long data arrays
         ];
 
         if (strlen($keyword) > 0) {

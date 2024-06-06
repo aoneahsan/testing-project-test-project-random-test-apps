@@ -26,23 +26,19 @@ class UserController extends Controller
 
     function updateUserData(Request $request)
     {
-        $request->validate([
-            'name' => 'nullable|string',
-        ]);
-
         try {
             $user = $request->user();
 
-            $requestContainsSomeData = $request->has('name'); // we will check for other fields once added
-            if ($requestContainsSomeData) {
-                $user->update([
-                    'name' => $request->has('name') ? $request->get('name') : $user->name
-                ]);
+            $user->update([
+                'name' => $request->has('name') ? $request->get('name') : $user->name,
+                'newsSource' => $request->has('newsSource') ? $request->get('newsSource') : $user->newsSource,
+                'newsCategory' => $request->has('newsCategory') ? $request->get('newsCategory') : $user->newsCategory,
+                'newsAuthor' => $request->has('newsAuthor') ? $request->get('newsAuthor') : $user->newsAuthor,
+            ]);
 
-                $user = User::where('id', '=', $user->id)->first();
-            }
+            $updatedUserData = User::where('id', '=', $user->id)->first();
 
-            $userResource = UserResource::make($user);
+            $userResource = UserResource::make($updatedUserData);
 
             return AppHelper::sendSuccessResponse(['data' => $userResource]);
         } catch (\Throwable $th) {

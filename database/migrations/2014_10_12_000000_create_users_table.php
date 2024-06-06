@@ -20,6 +20,9 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->dateTime('lastActiveAt')->default(Carbon::now());
+            $table->string('newsSource')->nullable();
+            $table->string('newsCategory')->nullable();
+            $table->string('newsAuthor')->nullable();
 
             $table->softDeletes();
             $table->rememberToken();
