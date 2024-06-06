@@ -1,6 +1,8 @@
 import AuthenticationHOC from '@/HOC/AuthenticationHOC';
 import NetworkDetectHOC from '@/HOC/NetworkDetectHOC';
-import { Heading } from '@radix-ui/themes';
+import Footer from '@/components/Footer';
+import Header from '@/components/Header';
+import { Box } from '@radix-ui/themes';
 import { Outlet } from 'react-router';
 
 const MainAppLayout: React.FC = () => {
@@ -8,9 +10,11 @@ const MainAppLayout: React.FC = () => {
 		<>
 			<NetworkDetectHOC>
 				<AuthenticationHOC>
-					<Heading>Header component here</Heading>
-					<Outlet />
-					<Heading>footer component here</Heading>
+					<Header />
+					<Box minHeight='82vh'>
+						<Outlet />
+					</Box>
+					<Footer />
 				</AuthenticationHOC>
 			</NetworkDetectHOC>
 		</>

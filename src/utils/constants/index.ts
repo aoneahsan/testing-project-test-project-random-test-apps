@@ -27,3 +27,11 @@ export const API_URLS = {
 	updateUserData: '/updateUserData',
 	updateUserStatus: '/updateUserStatus',
 };
+
+export const developerDetails = {
+	portfolioWebsite: 'https://aoneahsan.com',
+	updatedResume: 'https://aoneahsan.com/resume',
+	updatedCV: 'https://aoneahsan.com/cv',
+	linkedinProfile: 'https://linkedin.com/in/aoneahsan',
+	githubProfile: 'https://github.com/aoneahsan',
+} as const;

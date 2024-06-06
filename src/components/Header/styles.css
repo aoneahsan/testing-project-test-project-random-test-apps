@@ -1,0 +1,7 @@
+.header-con {
+	background-color: var(--blue-a5);
+}
+.header-content {
+	width: 90% !important;
+	margin: 0 auto;
+}

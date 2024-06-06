@@ -27,3 +27,7 @@ export enum RequestTypeEnum {
 	put = 'put',
 	delete = 'delete',
 }
+
+export enum LinkTarget {
+	blank = "_blank"
+}
