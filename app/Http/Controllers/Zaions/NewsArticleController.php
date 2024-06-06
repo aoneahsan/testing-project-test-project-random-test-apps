@@ -65,9 +65,16 @@ class NewsArticleController extends Controller
         } catch (\Throwable $th) {
         }
 
+        $articlesFromNYTimesApi = null;
+        try {
+            $articlesFromNYTimesApi = $this->fetchArticlesFromNYTimesApi($keyword, $page, $pageSize, $startDate, $endDate);
+        } catch (\Throwable $th) {
+        }
+
         return AppHelper::sendSuccessResponse([
             'articlesFromNewsApiAi' => $articlesFromNewsApiAi,
             'articlesFromNewsApiOrg' => $articlesFromNewsApiOrg,
+            'articlesFromNYTimesApi' => $articlesFromNYTimesApi,
             'articlesFromTheGuardianApi' => $articlesFromTheGuardianApi
         ]);
     }
@@ -177,6 +184,34 @@ class NewsArticleController extends Controller
 
         return json_decode($res->getBody()->getContents());
     }
-}
 
-// NEWS_API_AI_APP_KEY, NEWS_API_ORG_APP_KEY, THE_GUARDIAN_APP_KEY, NY_TIMES_APP_KEY
+    function fetchArticlesFromNYTimesApi($keyword = '', $page = 1, $pageSize = 10, $startDate = null, $endDate = null)
+    {
+        $query = [
+            'api-key' => env('NY_TIMES_APP_KEY'),
+            'format' => 'json',
+            'lang' => 'en',
+            'sort' => 'relevance',
+            'page' => $page,
+            'page-size' => $pageSize,
+            'fl' => 'abstract,web_url,lead_paragraph,source,multimedia,headline,section_name,byline'
+        ];
+
+        if (strlen($keyword) > 0) {
+            $query['q'] = $keyword;
+        }
+        if ($startDate) {
+            $query['begin_date'] = Carbon::make($startDate)->format('Ymd'); // format required by API "20240606
+        }
+        if ($endDate) {
+            $query['end_date'] = Carbon::make($endDate)->format('Ymd');
+        }
+
+        $res = $this->client->get('https://api.nytimes.com/svc/search/v2/articlesearch.json', [
+            'headers' => AppHelper::getApiRequestHeaders(),
+            'query' => $query
+        ]);
+
+        return json_decode($res->getBody()->getContents());
+    }
+}
