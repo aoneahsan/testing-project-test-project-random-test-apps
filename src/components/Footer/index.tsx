@@ -3,6 +3,7 @@ import './styles.css';
 import { developerDetails } from '@/utils/constants';
 import { LinkTarget } from '@/enums';
 import { useMemo } from 'react';
+import { useMediaQuery } from 'react-responsive';
 
 const Footer: React.FC = () => {
 	const links = useMemo(() => {
@@ -25,6 +26,9 @@ const Footer: React.FC = () => {
 			},
 		];
 	}, []);
+	const isMobile = useMediaQuery({
+		maxWidth: '700px',
+	});
 	return (
 		<>
 			<Box
@@ -33,11 +37,12 @@ const Footer: React.FC = () => {
 			>
 				<Box className='footer-content'>
 					<Flex
-						justify='between'
+						justify={isMobile ? 'center' : 'between'}
 						align='center'
+						direction={isMobile ? 'column' : 'row'}
 					>
-						<Text>All rights reserved © {new Date().getFullYear()}</Text>
-						<Text>
+						<Text align={isMobile ? 'center' : 'left'}>All rights reserved © {new Date().getFullYear()}</Text>
+						<Text align={isMobile ? 'center' : 'left'}>
 							Developed by{' '}
 							<Link
 								href={developerDetails.portfolioWebsite}
@@ -51,6 +56,8 @@ const Footer: React.FC = () => {
 					<Flex
 						justify='center'
 						align='center'
+						mt={isMobile ? '2': '1'}
+						wrap='wrap'
 					>
 						{links.map((el) => {
 							return (
@@ -58,6 +65,7 @@ const Footer: React.FC = () => {
 									size='1'
 									asChild
 									mr='2'
+									mb={isMobile ? '2': '0'}
 								>
 									<Link
 										href={el.url}

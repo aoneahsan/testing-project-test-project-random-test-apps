@@ -1,41 +1,15 @@
-import { Box, Button, Flex } from '@radix-ui/themes';
+import { Box, Flex } from '@radix-ui/themes';
 import IMAGES from '@/assets/images';
 import './styles.css';
-import LogoutButton from '../LogoutButton';
-import { matchRoutes, useLocation } from 'react-router';
 import { APP_ROUTES } from '@/utils/constants';
+import { useMemo } from 'react';
+import NavigationLink from '../NavigationLink';
 import { useRecoilValue } from 'recoil';
 import { userIsAuthenticatedRStateSelector } from '@/state/userState';
-import { formatRoutesMatchResult } from '@/utils/helpers';
-import { Link } from 'react-router-dom';
+import LogoutButton from '../LogoutButton';
 import { useMediaQuery } from 'react-responsive';
-import { useMemo } from 'react';
 
 const Header: React.FC = () => {
-	const location = useLocation();
-	const routesMatch = matchRoutes(
-		[
-			{ path: APP_ROUTES.home },
-			{ path: APP_ROUTES.userFeed },
-			{ path: APP_ROUTES.myAccount },
-			{ path: APP_ROUTES.login },
-			{ path: APP_ROUTES.register },
-		],
-		location
-	);
-	const matchedRoutes = routesMatch?.map((item) => {
-		return item.pathname;
-	});
-	const {
-		isLoginRoute,
-		isRegisterRoute,
-		isHomeRoute,
-		isMyAccountRoute,
-		isUserFeedRoute,
-	} = formatRoutesMatchResult(matchedRoutes);
-	const userIsAuthenticatedRState = useRecoilValue(
-		userIsAuthenticatedRStateSelector
-	);
 	const links = useMemo(() => {
 		return [
 			{
@@ -43,14 +17,33 @@ const Header: React.FC = () => {
 				isAuthenticated: true,
 				label: 'Search Articles',
 			},
+			{
+				path: APP_ROUTES.userFeed,
+				isAuthenticated: true,
+				label: 'News Feed',
+			},
+			{
+				path: APP_ROUTES.myAccount,
+				isAuthenticated: true,
+				label: 'My Account',
+			},
+			{
+				path: APP_ROUTES.login,
+				isAuthenticated: false,
+				label: 'Login',
+			},
+			{
+				path: APP_ROUTES.register,
+				isAuthenticated: false,
+				label: 'Register',
+			},
 		];
 	}, []);
-
-	const isTablet = useMediaQuery({
-		query: '(max-width: 900px)',
-	});
+	const userIsAuthenticatedRState = useRecoilValue(
+		userIsAuthenticatedRStateSelector
+	);
 	const isMobile = useMediaQuery({
-		query: '(max-width: 700px)',
+		maxWidth: '700px',
 	});
 
 	return (
@@ -61,63 +54,30 @@ const Header: React.FC = () => {
 					py='3'
 				>
 					<Flex
-						justify='between'
+						justify={isMobile ? 'center' : 'between'}
 						align='center'
+						direction={isMobile ? 'column' : 'row'}
 					>
 						<img
 							src={IMAGES.NewsPaperAppIcon}
 							width={60}
 						/>
-						<Box>
-							{userIsAuthenticatedRState ? (
-								<>
-									<Button
-										size='3'
-										mr='2'
-										color={isHomeRoute ? 'teal' : undefined}
-										asChild
-									>
-										<Link to={APP_ROUTES.home}>Search Articles</Link>
-									</Button>
-									<Button
-										size='3'
-										mr='2'
-										color={isUserFeedRoute ? 'teal' : undefined}
-										asChild
-									>
-										<Link to={APP_ROUTES.userFeed}>News Feed</Link>
-									</Button>
-									<Button
-										size='3'
-										mr='2'
-										color={isMyAccountRoute ? 'teal' : undefined}
-										asChild
-									>
-										<Link to={APP_ROUTES.myAccount}>My Account</Link>
-									</Button>
-									<LogoutButton />
-								</>
-							) : (
-								<>
-									<Button
-										size='3'
-										mr='2'
-										color={isLoginRoute ? 'teal' : undefined}
-										asChild
-									>
-										<Link to={APP_ROUTES.login}>Login</Link>
-									</Button>
-									<Button
-										size='3'
-										mr='2'
-										color={isRegisterRoute ? 'teal' : undefined}
-										asChild
-									>
-										<Link to={APP_ROUTES.register}>Register</Link>
-									</Button>
-								</>
-							)}
-						</Box>
+						<Flex
+							justify={isMobile ? 'center' : 'start'}
+							align='center'
+							mt={isMobile ? '4' : '0'}
+							wrap='wrap'
+						>
+							{links.map((el, index) => (
+								<NavigationLink
+									isAuthenticated={el.isAuthenticated}
+									label={el.label}
+									path={el.path}
+									key={`${el.path}-${el.label}-${index}`}
+								/>
+							))}
+							{userIsAuthenticatedRState ? <LogoutButton /> : null}
+						</Flex>
 					</Flex>
 				</Box>
 			</Box>

@@ -8,10 +8,18 @@ import {
 } from '@/utils/helpers/react-toastify';
 import { Button } from '@radix-ui/themes';
 import { useSetRecoilState } from 'recoil';
+import { useMediaQuery } from 'react-responsive';
 
 const LogoutButton: React.FC = () => {
 	const setUserDataRState = useSetRecoilState(userDataRStateAtom);
 	const { mutateAsync: logoutUser } = useDeleteRequest();
+
+	const isDesktop = useMediaQuery({
+		minWidth: '901px',
+	});
+	const isMobile = useMediaQuery({
+		maxWidth: '700px',
+	});
 
 	const onLogout = async () => {
 		try {
@@ -31,8 +39,9 @@ const LogoutButton: React.FC = () => {
 	return (
 		<Button
 			onClick={onLogout}
-			size='3'
+			size={isDesktop ? '3' : '2'}
 			color='red'
+			mb={isMobile ? '2' : '0'}
 		>
 			Logout
 		</Button>
