@@ -56,7 +56,7 @@ const formatNewsArticlesFromNewsApiAi = (
 		const _items = data?.articles?.results;
 		_items.forEach((el) => {
 			const _item: INewsItem = {
-				id: el.uri ?? getRandomId(),
+				id: getRandomId(),
 				title: el.title,
 				longDescription: el.body,
 				shortDescription: truncateText(el.body),
@@ -111,7 +111,7 @@ const formatNewsArticlesFromNYTimesApi = (
 		const _items = data?.response?.docs;
 		_items.forEach((el) => {
 			const _item: INewsItem = {
-				id: el._id ?? getRandomId(),
+				id: getRandomId(),
 				title: el?.headline?.main,
 				shortDescription: el.abstract,
 				longDescription: `${el.abstract} \n ${el.lead_paragraph}`,
@@ -141,7 +141,7 @@ const formatNewsArticlesFromTheGuardianApi = (
 		const _items = data?.response?.results;
 		_items.forEach((el) => {
 			const _item: INewsItem = {
-				id: el.id ?? getRandomId(),
+				id: getRandomId(),
 				title: el?.fields?.headline,
 				shortDescription: truncateText(el.fields?.bodyText),
 				longDescription: el.fields?.bodyText,

@@ -1,0 +1,3 @@
+.grid-column-equal-height {
+	grid-auto-rows: 1fr;
+}

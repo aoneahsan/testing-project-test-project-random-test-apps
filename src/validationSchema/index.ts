@@ -1,4 +1,7 @@
-import { RegisterFormFieldsEnum } from '@/enums/formData';
+import {
+	RegisterFormFieldsEnum,
+	SearchArticlesFiltersFormFieldsEnum,
+} from '@/enums/formData';
 import { z as ZOD } from 'zod';
 
 export const registerFormValidationSchema = ZOD.object({
@@ -32,4 +35,12 @@ export const userAccountFormValidationSchema = ZOD.object({
 		.trim()
 		.min(1, { message: 'Name is Required.' })
 		.max(255),
+});
+
+export const searchArticlesFormValidationSchema = ZOD.object({
+	[SearchArticlesFiltersFormFieldsEnum.keyword]: ZOD.string().trim().max(255),
+	[SearchArticlesFiltersFormFieldsEnum.startDate]: ZOD.string(),
+	[SearchArticlesFiltersFormFieldsEnum.endDate]: ZOD.string(),
+	[SearchArticlesFiltersFormFieldsEnum.category]: ZOD.string().trim().max(255),
+	[SearchArticlesFiltersFormFieldsEnum.source]: ZOD.string().trim().max(255),
 });

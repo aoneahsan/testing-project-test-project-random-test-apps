@@ -2,6 +2,7 @@ import { FormFieldType } from '@/enums';
 import {
 	LoginFormFieldsEnum,
 	RegisterFormFieldsEnum,
+	SearchArticlesFiltersFormFieldsEnum,
 	UserAccountDataFormFieldsEnum,
 } from '@/enums/formData';
 import { ILoginFormData, IRegisterFormData } from '@/types/formData';
@@ -14,12 +15,14 @@ interface TextInputProps {
 	inputName:
 		| RegisterFormFieldsEnum
 		| LoginFormFieldsEnum
-		| UserAccountDataFormFieldsEnum;
+		| UserAccountDataFormFieldsEnum
+		| SearchArticlesFiltersFormFieldsEnum;
 	placeholder: string;
 	type: FormFieldType;
 	value: string | number | undefined;
 	errorMessage: string | undefined;
 	isTouched: boolean | undefined;
+	showValidState?: boolean;
 }
 
 const TextInput: React.FC<TextInputProps> = ({
@@ -29,6 +32,7 @@ const TextInput: React.FC<TextInputProps> = ({
 	value,
 	errorMessage,
 	isTouched,
+	showValidState = true,
 }) => {
 	const [compState, setCompState] = useState<{ showPassword: boolean }>({
 		showPassword: false,
@@ -54,7 +58,15 @@ const TextInput: React.FC<TextInputProps> = ({
 				value={value}
 				onChange={handleChange}
 				onBlur={handleBlur}
-				color={errorMessage ? 'red' : isTouched ? 'green' : undefined}
+				color={
+					errorMessage
+						? 'red'
+						: isTouched
+						? showValidState
+							? 'green'
+							: undefined
+						: undefined
+				}
 				variant={isTouched ? 'soft' : 'surface'}
 			>
 				{type === FormFieldType.password ? (

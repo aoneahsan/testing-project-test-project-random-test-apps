@@ -1,7 +1,6 @@
-import axiosInstance from '@/axiosInstance';
 import HandleFormValidationState from '@/components/HandleFormValidationState';
+import FormActionButtons from '@/components/form/FormActionButtons';
 import TextInput from '@/components/form/TextInput';
-import { ResponseCodeEnum, ResponseStatusEnum } from '@/enums/backendApi';
 import { RegisterFormFieldsEnum } from '@/enums/formData';
 import { usePostRequest } from '@/hooks/reactQuery';
 import { formValidationRStateAtom } from '@/state/formState';
@@ -162,23 +161,7 @@ const RegisterForm: React.FC = () => {
 							}
 						)}
 
-						<Box mb='3'>
-							<Flex justify='between'>
-								<Button
-									type='reset'
-									color='red'
-									disabled={!dirty}
-								>
-									Reset
-								</Button>
-								<Button
-									type='submit'
-									disabled={!isValid}
-								>
-									Submit
-								</Button>
-							</Flex>
-						</Box>
+						<FormActionButtons />
 					</Form>
 				);
 			}}

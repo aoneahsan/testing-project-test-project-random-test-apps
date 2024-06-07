@@ -9,6 +9,7 @@ import NotFound from './pages/NotFound';
 import MyAccount from './pages/MyAccount';
 import MainAppLayout from './layout/MainAppLayout';
 import RouteGuardHOC from './HOC/RouteGuardHOC';
+import NewsDetail from './pages/NewsDetail';
 
 export const appRouter = createBrowserRouter([
 	{
@@ -62,6 +63,15 @@ export const appRouter = createBrowserRouter([
 					</RouteGuardHOC>
 				),
 				path: APP_ROUTES.myAccount,
+				errorElement: <ErrorBoundary />,
+			},
+			{
+				element: (
+					<RouteGuardHOC isAuthenticatedView>
+						<NewsDetail />
+					</RouteGuardHOC>
+				),
+				path: APP_ROUTES.newsDetail,
 				errorElement: <ErrorBoundary />,
 			},
 		],

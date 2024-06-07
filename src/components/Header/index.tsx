@@ -50,7 +50,7 @@ const Header: React.FC = () => {
 		<>
 			<Box className='header-con'>
 				<Box
-					className='header-content'
+					className='container'
 					py='3'
 				>
 					<Flex

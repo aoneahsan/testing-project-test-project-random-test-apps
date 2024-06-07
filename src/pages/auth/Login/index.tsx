@@ -1,4 +1,5 @@
 import HandleFormValidationState from '@/components/HandleFormValidationState';
+import FormActionButtons from '@/components/form/FormActionButtons';
 import TextInput from '@/components/form/TextInput';
 import { LoginFormFieldsEnum } from '@/enums/formData';
 import { usePostRequest } from '@/hooks/reactQuery';
@@ -19,18 +20,7 @@ import {
 } from '@/utils/helpers/reactToastify';
 import { MESSAGES } from '@/utils/messages';
 import { loginFormValidationSchema } from '@/validationSchema';
-import { InfoCircledIcon } from '@radix-ui/react-icons';
-import {
-	Box,
-	Button,
-	Callout,
-	Card,
-	Flex,
-	Heading,
-	Link,
-	Switch,
-	Text,
-} from '@radix-ui/themes';
+import { Box, Card, Flex, Heading, Link, Text } from '@radix-ui/themes';
 import { Form, Formik } from 'formik';
 import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router';
@@ -167,17 +157,7 @@ const LoginForm: React.FC = () => {
 							}
 						)}
 
-						<Box mb='3'>
-							<Flex justify='between'>
-								<Button
-									type='reset'
-									color='red'
-								>
-									Reset
-								</Button>
-								<Button type='submit'>Submit</Button>
-							</Flex>
-						</Box>
+						<FormActionButtons />
 					</Form>
 				);
 			}}

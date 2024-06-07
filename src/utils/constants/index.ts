@@ -10,6 +10,10 @@ export const React_QUERY_KEYS = {
 	},
 } as const;
 
+export const routeParams = {
+	newsId: ':newsId',
+} as const;
+
 export const APP_ROUTES = {
 	wildCard: '*',
 	rootRoute: '/',
@@ -18,6 +22,7 @@ export const APP_ROUTES = {
 	login: '/login',
 	userFeed: '/feed',
 	myAccount: '/my-account',
+	newsDetail: `/news/${routeParams.newsId}`,
 };
 export const API_URLS = {
 	register: '/register',
@@ -26,6 +31,8 @@ export const API_URLS = {
 	getUserData: '/getUserData',
 	updateUserData: '/updateUserData',
 	updateUserStatus: '/updateUserStatus',
+	searchNewsArticles: '/searchNewsArticles',
+	getNewsFeed: '/getNewsFeed',
 };
 
 export const developerDetails = {

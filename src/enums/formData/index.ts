@@ -13,3 +13,11 @@ export enum LoginFormFieldsEnum {
 export enum UserAccountDataFormFieldsEnum {
 	name = 'name',
 }
+
+export enum SearchArticlesFiltersFormFieldsEnum {
+	keyword = 'keyword',
+	startDate = 'startDate',
+	endDate = 'endDate',
+	category = 'category',
+	source = 'source',
+}

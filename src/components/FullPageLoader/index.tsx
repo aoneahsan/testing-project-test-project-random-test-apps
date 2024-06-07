@@ -10,7 +10,7 @@ const FullPageLoader: React.FC = () => {
 			height='100%'
 			minHeight='100vh'
 		>
-			<Spinner className='spinner' />
+			<Spinner className='spinner' size='3' />
 		</Flex>
 	);
 };

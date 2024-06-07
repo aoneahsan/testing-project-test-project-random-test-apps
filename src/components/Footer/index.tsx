@@ -1,7 +1,7 @@
 import { Box, Button, Flex, Link, Text } from '@radix-ui/themes';
 import './styles.css';
 import { developerDetails } from '@/utils/constants';
-import { LinkTarget } from '@/enums';
+import { LinkTargetEnum } from '@/enums';
 import { useMemo } from 'react';
 import { useMediaQuery } from 'react-responsive';
 
@@ -35,7 +35,7 @@ const Footer: React.FC = () => {
 				className='footer-con'
 				py='2'
 			>
-				<Box className='footer-content'>
+				<Box className='container'>
 					<Flex
 						justify={isMobile ? 'center' : 'between'}
 						align='center'
@@ -48,7 +48,7 @@ const Footer: React.FC = () => {
 							Developed by{' '}
 							<Link
 								href={developerDetails.portfolioWebsite}
-								target={LinkTarget.blank}
+								target={LinkTargetEnum.blank}
 							>
 								Ahsan Mahmood
 							</Link>{' '}
@@ -72,7 +72,7 @@ const Footer: React.FC = () => {
 								>
 									<Link
 										href={el.url}
-										target={LinkTarget.blank}
+										target={LinkTargetEnum.blank}
 									>
 										{el.label}
 									</Link>

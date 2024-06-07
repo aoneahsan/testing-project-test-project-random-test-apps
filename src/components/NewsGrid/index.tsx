@@ -1,40 +1,64 @@
-import { searchNewsArticlesApiResponseDummyData } from '@/data/reactQuery';
-import { searchedNewsArticlesRStateAtom } from '@/state/newsArticles';
-import { INewsItem } from '@/types/newsArticlesFrontend';
-import { formatNewsArticlesData } from '@/utils/helpers/reactQuery/newsArticlesBackend';
-import { useEffect } from 'react';
-import { useRecoilState } from 'recoil';
 import NewsGridItem from '../NewsGridItem';
-import { Box, Flex, Grid } from '@radix-ui/themes';
+import { Box, Flex, Grid, Heading } from '@radix-ui/themes';
 
-const NewsGrid: React.FC = () => {
-	const _data = searchNewsArticlesApiResponseDummyData.result?.data;
-	const [searchedNewsArticlesRState, setSearchedNewsArticlesRState] =
-		useRecoilState(searchedNewsArticlesRStateAtom);
-	let newsArticles: INewsItem[] = [];
-	if (_data) {
-		newsArticles = formatNewsArticlesData(_data);
-	}
+import './styles.css';
+import { useMediaQuery } from 'react-responsive';
+import { INewsItem } from '@/types/newsArticlesFrontend';
+import FullPageCenteredMessage from '../FullPageCenteredMessage';
 
-	// just for testing for now
-	useEffect(() => {
-		setSearchedNewsArticlesRState(newsArticles);
-	}, []);
+interface INewsGridProps {
+	newsArticles: INewsItem[];
+}
+
+const NewsGrid: React.FC<INewsGridProps> = ({ newsArticles }) => {
+	const isLargeScreen = useMediaQuery({
+		minWidth: '1900px',
+	});
+	const isDesktop = useMediaQuery({
+		minWidth: '1350px',
+	});
+	const isTablet = useMediaQuery({
+		minWidth: '1000px',
+	});
+	const isMobile = useMediaQuery({
+		maxWidth: '700px',
+	});
 	return (
-		<Box>
-			<Grid
-				gap='3'
-				columns='6'
-			>
-				{searchedNewsArticlesRState.map((el) => {
-					return (
-						<NewsGridItem
-							key={el.id}
-							newsItemData={el}
-						/>
-					);
-				})}
-			</Grid>
+		<Box
+			className='container'
+			py='6'
+		>
+			{newsArticles.length > 0 ? (
+				<Grid
+					gap='6'
+					columns={
+						isLargeScreen
+							? '5'
+							: isDesktop
+							? '4'
+							: isTablet
+							? '3'
+							: isMobile
+							? '1'
+							: '2'
+					}
+					className='grid-column-equal-height'
+				>
+					{newsArticles?.map((el) => {
+						return (
+							<NewsGridItem
+								key={el.id}
+								newsItemData={el}
+							/>
+						);
+					})}
+				</Grid>
+			) : (
+				<FullPageCenteredMessage
+					message='No News Articles Found, Please Update the setting and try again
+				later!'
+				/>
+			)}
 		</Box>
 	);
 };

@@ -135,7 +135,7 @@ export const formatRoutesMatchResult = (routesMatch: string[] | undefined) => {
 	}
 };
 
-export const truncateText = (str?: string, length: number = 300): string => {
+export const truncateText = (str?: string, length: number = 250): string => {
 	if (str && str.length <= length) {
 		return str;
 	} else {

@@ -12,3 +12,10 @@ html {
 .justify-between {
 	justify-content: space-between;
 }
+.h-full {
+	height: 100%;
+}
+.container {
+	width: 90%;
+	margin: 0 auto;
+}

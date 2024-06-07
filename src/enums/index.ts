@@ -28,6 +28,6 @@ export enum RequestTypeEnum {
 	delete = 'delete',
 }
 
-export enum LinkTarget {
+export enum LinkTargetEnum {
 	blank = "_blank"
 }
