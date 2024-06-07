@@ -104,7 +104,8 @@ export const useDeleteRequest = (queriesToInvalidate?: QueryFilters) => {
 export const useGetRequest = (
 	url: string,
 	_queryKey: ReactQueryKeyEnum,
-	isAuthenticatedRequest: boolean = true
+	isAuthenticatedRequest: boolean = true,
+	staleTime?: number
 ) => {
 	const [userDataRState, setUserDataRState] =
 		useRecoilState(userDataRStateAtom);
@@ -139,6 +140,7 @@ export const useGetRequest = (
 		refetchOnWindowFocus: true,
 		throwOnError: true,
 		retry: 2,
+		staleTime: staleTime,
 	});
 
 	const _status = _query.data?.status;

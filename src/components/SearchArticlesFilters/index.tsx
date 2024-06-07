@@ -1,14 +1,15 @@
 import { Box, Flex, Heading } from '@radix-ui/themes';
 import TextInput from '@/components/form/TextInput';
 import { Form, Formik } from 'formik';
-import { API_URLS } from '@/utils/constants';
-import { useMemo } from 'react';
-import { useGetRequest } from '@/hooks/reactQuery';
-import { ReactQueryKeyEnum } from '@/enums/reactQuery';
+import { useCallback, useMemo } from 'react';
 import { SearchArticlesFiltersFormFieldsEnum } from '@/enums/formData';
 import { ZodError } from 'zod';
 import { searchArticlesFormValidationSchema } from '@/validationSchema';
-import { searchArticlesFormFields } from '@/utils/constants/formFields';
+import {
+	newsCategorySelectOptions,
+	newsSourceSelectOptions,
+	searchArticlesFormFields,
+} from '@/utils/constants/formFields';
 import FormActionButtons from '../form/FormActionButtons';
 import { useSearchParams } from 'react-router-dom';
 import { FormFieldType } from '@/enums';
@@ -39,23 +40,31 @@ const SearchArticlesFiltersForm: React.FC = () => {
 	const searchParamsData =
 		getSearchParamsData<ISearchArticlesFiltersSearchParams>(_searchParams);
 
-	console.log({ ml: 'SearchArticlesFiltersForm log1', searchParamsData });
-
 	const initialValues = useMemo(
 		() => ({
-			[SearchArticlesFiltersFormFieldsEnum.keyword]: '',
-			[SearchArticlesFiltersFormFieldsEnum.startDate]: '',
-			[SearchArticlesFiltersFormFieldsEnum.endDate]: '',
-			[SearchArticlesFiltersFormFieldsEnum.category]: '',
-			[SearchArticlesFiltersFormFieldsEnum.source]: '',
+			[SearchArticlesFiltersFormFieldsEnum.keyword]:
+				searchParamsData?.keyword ?? '',
+			[SearchArticlesFiltersFormFieldsEnum.startDate]:
+				searchParamsData?.startDate ?? '',
+			[SearchArticlesFiltersFormFieldsEnum.endDate]:
+				searchParamsData?.endDate ?? '',
+			[SearchArticlesFiltersFormFieldsEnum.category]:
+				searchParamsData?.category ?? '',
+			[SearchArticlesFiltersFormFieldsEnum.source]:
+				searchParamsData?.source ?? '',
 		}),
-		[]
+		[
+			searchParamsData?.keyword,
+			searchParamsData?.startDate,
+			searchParamsData?.endDate,
+			searchParamsData?.category,
+			searchParamsData?.source,
+		]
 	);
-	// const { data, refetch } = useGetRequest(
-	// 	API_URLS.searchNewsArticles,
-	// 	ReactQueryKeyEnum.searchNewsArticles
-	// );
-	// console.log({ ml: 'SearchArticlesFiltersForm log1', data, refetch });
+
+	const onResetClicked = useCallback(() => {
+		_setSearchParams(undefined);
+	}, []);
 
 	return (
 		<Formik
@@ -86,8 +95,9 @@ const SearchArticlesFiltersForm: React.FC = () => {
 
 				setSearchParamsData(_data, _setSearchParams);
 			}}
+			enableReinitialize
 		>
-			{({ values, errors, touched }) => {
+			{({ values, errors, touched, setValues }) => {
 				return (
 					<Form>
 						<Flex
@@ -129,11 +139,17 @@ const SearchArticlesFiltersForm: React.FC = () => {
 											placeholder={
 												searchArticlesFormFields[_fieldKey].placeholder
 											}
-											minDate={searchArticlesFormFields[_fieldKey].minDate}
-											maxDate={searchArticlesFormFields[_fieldKey].maxDate}
 											errorMessage={errors[_fieldKey]}
 											isTouched={touched[_fieldKey]}
-											options={searchArticlesFormFields[_fieldKey].options}
+											options={
+												_fieldKey ===
+												SearchArticlesFiltersFormFieldsEnum.category
+													? newsCategorySelectOptions
+													: _fieldKey ===
+													  SearchArticlesFiltersFormFieldsEnum.source
+													? newsSourceSelectOptions
+													: null
+											}
 										/>
 									);
 								} else {
@@ -153,7 +169,7 @@ const SearchArticlesFiltersForm: React.FC = () => {
 									);
 								}
 							})}
-							<FormActionButtons />
+							<FormActionButtons onResetClicked={onResetClicked} />
 						</Flex>
 					</Form>
 				);

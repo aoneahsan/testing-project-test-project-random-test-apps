@@ -184,3 +184,32 @@ export const getSearchParamsData = <T>(
 		return null;
 	}
 };
+
+export const addQueryParamsInUrl = (
+	url: string,
+	queryParams: Record<string, string> | null
+) => {
+	if (queryParams && Object.keys(queryParams).length > 0) {
+		if (!url.includes('?')) {
+			url += '?';
+		}
+
+		Object.keys(queryParams).forEach((_key, index, arr) => {
+			url += `${_key}=${queryParams[_key]}`;
+
+			if (index < arr.length - 1) {
+				url += '&';
+			}
+		});
+
+		return url;
+	} else {
+		return url;
+	}
+};
+
+export const toTitleCase = (str: string): string => {
+	return str.replace(/\w\S*/g, function (txt) {
+		return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+	});
+};

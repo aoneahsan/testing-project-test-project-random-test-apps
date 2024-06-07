@@ -12,7 +12,7 @@ interface ISelectInputProps {
 	placeholder: string;
 	errorMessage?: string;
 	isTouched?: boolean;
-	options: ISelectOption[];
+	options: ISelectOption[] | null;
 }
 
 const SelectInput: React.FC<ISelectInputProps> = ({
@@ -30,15 +30,16 @@ const SelectInput: React.FC<ISelectInputProps> = ({
 		<Flex direction='column'>
 			<ReactSelect
 				name={inputName}
-				value={value}
+				value={value ? { label: value, value } : null}
 				placeholder={placeholder}
-				options={options}
+				options={options ?? []}
 				onBlur={handleBlur}
 				onChange={(val) => {
-					console.log({ val, value });
-					setFieldValue(inputName, val);
+					const _val = val as unknown as ISelectOption;
+					setFieldValue(inputName, _val.value, true);
 				}}
 				className='select-con'
+				isClearable
 			/>
 			{isTouched && errorMessage ? (
 				<Text

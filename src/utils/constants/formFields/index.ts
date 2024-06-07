@@ -3,6 +3,7 @@ import {
 	RegisterFormFieldsEnum,
 	SearchArticlesFiltersFormFieldsEnum,
 } from '@/enums/formData';
+import { ISelectOption } from '@/types/formData';
 import dayjs from 'dayjs';
 
 export const loginFormFields = {
@@ -39,47 +40,59 @@ export const searchArticlesFormFields = {
 		placeholder: 'Keyword',
 		minDate: null,
 		maxDate: null,
-		options: [],
 	},
 	[SearchArticlesFiltersFormFieldsEnum.startDate]: {
 		type: FormFieldType.date,
 		placeholder: 'Start Date',
 		minDate: dayjs(new Date()).subtract(31, 'days').toDate(),
 		maxDate: dayjs(new Date()).subtract(1, 'days').toDate(),
-		options: [],
 	},
 	[SearchArticlesFiltersFormFieldsEnum.endDate]: {
 		type: FormFieldType.date,
 		placeholder: 'End Date',
 		minDate: dayjs(new Date()).subtract(30, 'days').toDate(),
 		maxDate: dayjs(new Date()).toDate(),
-		options: [],
 	},
 	[SearchArticlesFiltersFormFieldsEnum.category]: {
 		type: FormFieldType.select,
 		placeholder: 'Category',
 		minDate: null,
 		maxDate: null,
-		options: [
-			{
-				label: 'Sports',
-				value: 'sports',
-			},
-			{
-				label: 'Business',
-				value: 'business',
-			},
-			{
-				label: 'Entertainment',
-				value: 'entertainment'
-			}
-		],
 	},
 	[SearchArticlesFiltersFormFieldsEnum.source]: {
 		type: FormFieldType.select,
 		placeholder: 'Source',
 		minDate: null,
 		maxDate: null,
-		options: [],
 	},
 } as const;
+
+export const newsCategorySelectOptions: ISelectOption[] = [
+	{
+		label: 'sports',
+		value: 'sports',
+	},
+	{
+		label: 'business',
+		value: 'business',
+	},
+	{
+		label: 'entertainment',
+		value: 'entertainment',
+	},
+];
+
+export const newsSourceSelectOptions: ISelectOption[] = [
+	{
+		label: 'ign',
+		value: 'ign',
+	},
+	{
+		label: 'nfl-news',
+		value: 'nfl-news',
+	},
+	{
+		label: 'abc-news',
+		value: 'abc-news',
+	},
+];
