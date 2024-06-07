@@ -134,3 +134,17 @@ export const formatRoutesMatchResult = (routesMatch: string[] | undefined) => {
 		return {};
 	}
 };
+
+export const truncateText = (str?: string, length: number = 300): string => {
+	if (str && str.length <= length) {
+		return str;
+	} else {
+		return str ? str?.substring(0, length) + '...' : '';
+	}
+};
+
+export const getRandomId = (): string => {
+	return (
+		new Date().getTime() + Math.round(Math.random() * 1000000)
+	).toString();
+};
