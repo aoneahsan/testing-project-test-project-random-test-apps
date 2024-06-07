@@ -202,7 +202,8 @@ class NewsArticleController extends Controller
             'use-date' => 'published',
             'page' => $page,
             'page-size' => $pageSize,
-            'show-fields' => 'headline,body,shortUrl,thumbnail,publication,bodyText',
+            // 'show-fields' => 'headline,body,shortUrl,thumbnail,publication,bodyText',
+            'show-fields' => 'headline,shortUrl,thumbnail,publication,bodyText',
             'show-tags' => 'keyword,publication,type',
             'show-section' => 'true',
             'show-references' => 'author'
@@ -239,7 +240,7 @@ class NewsArticleController extends Controller
             'page' => $page,
             'page-size' => $pageSize,
             // 'fl' => 'abstract,web_url,lead_paragraph,source,multimedia,headline,section_name,byline',
-            'fl' => 'abstract,web_url,lead_paragraph,source,headline,section_name', // not fetching the 'multimedia' and 'byline' as these two fields return long data arrays
+            'fl' => 'abstract,web_url,lead_paragraph,source,headline,section_name,_id', // not fetching the 'multimedia' and 'byline' as these two fields return long data arrays
         ];
 
         if (strlen($keyword) > 0) {
