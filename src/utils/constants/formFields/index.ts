@@ -3,6 +3,7 @@ import {
 	RegisterFormFieldsEnum,
 	SearchArticlesFiltersFormFieldsEnum,
 } from '@/enums/formData';
+import dayjs from 'dayjs';
 
 export const loginFormFields = {
 	[RegisterFormFieldsEnum.email]: {
@@ -36,21 +37,49 @@ export const searchArticlesFormFields = {
 	[SearchArticlesFiltersFormFieldsEnum.keyword]: {
 		type: FormFieldType.text,
 		placeholder: 'Keyword',
+		minDate: null,
+		maxDate: null,
+		options: [],
 	},
 	[SearchArticlesFiltersFormFieldsEnum.startDate]: {
-		type: FormFieldType.text,
+		type: FormFieldType.date,
 		placeholder: 'Start Date',
+		minDate: dayjs(new Date()).subtract(31, 'days').toDate(),
+		maxDate: dayjs(new Date()).subtract(1, 'days').toDate(),
+		options: [],
 	},
 	[SearchArticlesFiltersFormFieldsEnum.endDate]: {
-		type: FormFieldType.text,
+		type: FormFieldType.date,
 		placeholder: 'End Date',
+		minDate: dayjs(new Date()).subtract(30, 'days').toDate(),
+		maxDate: dayjs(new Date()).toDate(),
+		options: [],
 	},
 	[SearchArticlesFiltersFormFieldsEnum.category]: {
-		type: FormFieldType.text,
+		type: FormFieldType.select,
 		placeholder: 'Category',
+		minDate: null,
+		maxDate: null,
+		options: [
+			{
+				label: 'Sports',
+				value: 'sports',
+			},
+			{
+				label: 'Business',
+				value: 'business',
+			},
+			{
+				label: 'Entertainment',
+				value: 'entertainment'
+			}
+		],
 	},
 	[SearchArticlesFiltersFormFieldsEnum.source]: {
-		type: FormFieldType.text,
+		type: FormFieldType.select,
 		placeholder: 'Source',
+		minDate: null,
+		maxDate: null,
+		options: [],
 	},
 } as const;

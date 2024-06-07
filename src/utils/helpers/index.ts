@@ -3,6 +3,8 @@ import { AES, enc } from 'crypto-js';
 import ENVS from '../envKeys';
 import { APP_ROUTES, LOCALSTORAGE_KEYS } from '../constants';
 import { IUser } from '@/types/userData';
+import { URLSearchParamsInit } from 'react-router-dom';
+import { SearchParamKeysEnum } from '@/enums';
 
 export const encryptData = (val: unknown): string | null => {
 	try {
@@ -147,4 +149,38 @@ export const getRandomId = (): string => {
 	return (
 		new Date().getTime() + Math.round(Math.random() * 1000000)
 	).toString();
+};
+
+export const setSearchParamsData = (
+	data: unknown,
+	setSearchParams: (
+		nextInit?: URLSearchParamsInit,
+		navigateOpts?: undefined
+	) => void
+) => {
+	try {
+		const _encryptedData = encryptData(data);
+		if (_encryptedData) {
+			setSearchParams({
+				[SearchParamKeysEnum.encryptedDataSearchParam]: _encryptedData,
+			});
+		}
+	} catch (error) {}
+};
+
+export const getSearchParamsData = <T>(
+	searchParams: URLSearchParams
+): T | null => {
+	try {
+		const _data = searchParams.get(
+			SearchParamKeysEnum.encryptedDataSearchParam
+		);
+		if (_data) {
+			return decryptData<T>(_data);
+		} else {
+			return null;
+		}
+	} catch (error) {
+		return null;
+	}
 };

@@ -11,6 +11,11 @@ import { searchArticlesFormValidationSchema } from '@/validationSchema';
 import { searchArticlesFormFields } from '@/utils/constants/formFields';
 import FormActionButtons from '../form/FormActionButtons';
 import { useSearchParams } from 'react-router-dom';
+import { FormFieldType } from '@/enums';
+import DatePickerInput from '../form/DatePickerInput';
+import { getSearchParamsData, setSearchParamsData } from '@/utils/helpers';
+import { ISearchArticlesFiltersSearchParams } from '@/types/searchParams';
+import SelectInput from '../form/SelectInput';
 
 const SearchArticlesFilters: React.FC = () => {
 	return (
@@ -30,12 +35,11 @@ const SearchArticlesFilters: React.FC = () => {
 };
 
 const SearchArticlesFiltersForm: React.FC = () => {
-	const [searchParams, setSearchParams] = useSearchParams();
-	const keyword =
-		searchParams.get(SearchArticlesFiltersFormFieldsEnum.keyword) ??
-		'default-keyword';
+	const [_searchParams, _setSearchParams] = useSearchParams();
+	const searchParamsData =
+		getSearchParamsData<ISearchArticlesFiltersSearchParams>(_searchParams);
 
-	console.log({ ml: 'SearchArticlesFiltersForm log1', keyword });
+	console.log({ ml: 'SearchArticlesFiltersForm log1', searchParamsData });
 
 	const initialValues = useMemo(
 		() => ({
@@ -65,7 +69,7 @@ const SearchArticlesFiltersForm: React.FC = () => {
 					}
 				}
 			}}
-			onSubmit={async (values, { setErrors }) => {
+			onSubmit={async (values) => {
 				const _data: Record<string, string> = {};
 				[
 					SearchArticlesFiltersFormFieldsEnum.keyword,
@@ -80,7 +84,7 @@ const SearchArticlesFiltersForm: React.FC = () => {
 					}
 				});
 
-				setSearchParams(_data);
+				setSearchParamsData(_data, _setSearchParams);
 			}}
 		>
 			{({ values, errors, touched }) => {
@@ -95,20 +99,59 @@ const SearchArticlesFiltersForm: React.FC = () => {
 									searchArticlesFormFields
 								) as SearchArticlesFiltersFormFieldsEnum[]
 							).map((_fieldKey) => {
-								return (
-									<TextInput
-										key={_fieldKey}
-										inputName={_fieldKey}
-										placeholder={
-											searchArticlesFormFields[_fieldKey].placeholder
-										}
-										type={searchArticlesFormFields[_fieldKey].type}
-										value={values[_fieldKey]}
-										errorMessage={errors[_fieldKey]}
-										isTouched={touched[_fieldKey]}
-										showValidState={false}
-									/>
-								);
+								if (
+									searchArticlesFormFields[_fieldKey].type ===
+									FormFieldType.date
+								) {
+									return (
+										<DatePickerInput
+											key={_fieldKey}
+											value={values[_fieldKey]}
+											inputName={_fieldKey}
+											placeholder={
+												searchArticlesFormFields[_fieldKey].placeholder
+											}
+											minDate={searchArticlesFormFields[_fieldKey].minDate}
+											maxDate={searchArticlesFormFields[_fieldKey].maxDate}
+											errorMessage={errors[_fieldKey]}
+											isTouched={touched[_fieldKey]}
+										/>
+									);
+								} else if (
+									searchArticlesFormFields[_fieldKey].type ===
+									FormFieldType.select
+								) {
+									return (
+										<SelectInput
+											key={_fieldKey}
+											value={values[_fieldKey]}
+											inputName={_fieldKey}
+											placeholder={
+												searchArticlesFormFields[_fieldKey].placeholder
+											}
+											minDate={searchArticlesFormFields[_fieldKey].minDate}
+											maxDate={searchArticlesFormFields[_fieldKey].maxDate}
+											errorMessage={errors[_fieldKey]}
+											isTouched={touched[_fieldKey]}
+											options={searchArticlesFormFields[_fieldKey].options}
+										/>
+									);
+								} else {
+									return (
+										<TextInput
+											key={_fieldKey}
+											inputName={_fieldKey}
+											placeholder={
+												searchArticlesFormFields[_fieldKey].placeholder
+											}
+											type={searchArticlesFormFields[_fieldKey].type}
+											value={values[_fieldKey]}
+											errorMessage={errors[_fieldKey]}
+											isTouched={touched[_fieldKey]}
+											showValidState={false}
+										/>
+									);
+								}
 							})}
 							<FormActionButtons />
 						</Flex>

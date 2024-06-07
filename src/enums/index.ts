@@ -12,6 +12,8 @@ export enum FormFieldType {
 	text = 'text',
 	email = 'email',
 	password = 'password',
+	date = 'date',
+	select = 'select',
 }
 export enum ReactToastifyTypeEnum {
 	info = 'info',
@@ -29,5 +31,9 @@ export enum RequestTypeEnum {
 }
 
 export enum LinkTargetEnum {
-	blank = "_blank"
+	blank = '_blank',
+}
+
+export enum SearchParamKeysEnum {
+	encryptedDataSearchParam = 's',
 }

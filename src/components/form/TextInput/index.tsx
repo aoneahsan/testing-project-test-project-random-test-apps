@@ -1,22 +1,16 @@
 import { FormFieldType } from '@/enums';
 import {
-	LoginFormFieldsEnum,
-	RegisterFormFieldsEnum,
-	SearchArticlesFiltersFormFieldsEnum,
-	UserAccountDataFormFieldsEnum,
-} from '@/enums/formData';
-import { ILoginFormData, IRegisterFormData } from '@/types/formData';
+	ILoginFormData,
+	IRegisterFormData,
+	ISearchArticlesFiltersFormData,
+} from '@/types/formData';
 import { Box, IconButton, Text, TextField } from '@radix-ui/themes';
 import { useFormikContext } from 'formik';
 import { EyeOpenIcon, EyeClosedIcon } from '@radix-ui/react-icons';
 import { useState } from 'react';
 
 interface TextInputProps {
-	inputName:
-		| RegisterFormFieldsEnum
-		| LoginFormFieldsEnum
-		| UserAccountDataFormFieldsEnum
-		| SearchArticlesFiltersFormFieldsEnum;
+	inputName: string;
 	placeholder: string;
 	type: FormFieldType;
 	value: string | number | undefined;
@@ -38,7 +32,7 @@ const TextInput: React.FC<TextInputProps> = ({
 		showPassword: false,
 	});
 	const { handleChange, handleBlur } = useFormikContext<
-		IRegisterFormData | ILoginFormData
+		IRegisterFormData | ILoginFormData | ISearchArticlesFiltersFormData
 	>();
 
 	const changeShowPasswordState = () => {
@@ -53,7 +47,13 @@ const TextInput: React.FC<TextInputProps> = ({
 			<TextField.Root
 				size='3'
 				placeholder={placeholder}
-				type={compState.showPassword ? FormFieldType.text : type}
+				type={
+					compState.showPassword
+						? FormFieldType.text
+						: type === FormFieldType.select // this is not a valid html input type
+						? FormFieldType.text
+						: type
+				}
 				name={inputName}
 				value={value}
 				onChange={handleChange}
