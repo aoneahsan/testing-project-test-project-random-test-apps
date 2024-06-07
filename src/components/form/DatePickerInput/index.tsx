@@ -1,3 +1,4 @@
+
 import { ISearchArticlesFiltersFormData } from '@/types/formData';
 import { useFormikContext } from 'formik';
 import DatePicker from 'react-datepicker';
@@ -28,7 +29,7 @@ const DatePickerInput: React.FC<IDatePickerInputProps> = ({
 		useFormikContext<ISearchArticlesFiltersFormData>();
 
 	return (
-		<Flex direction='column'>
+		<Flex direction='column' mb='3'>
 			<DatePicker
 				selected={value ? new Date(value) : null}
 				onChange={(date) => {

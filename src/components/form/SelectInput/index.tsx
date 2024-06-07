@@ -27,7 +27,7 @@ const SelectInput: React.FC<ISelectInputProps> = ({
 		useFormikContext<ISearchArticlesFiltersFormData>();
 
 	return (
-		<Flex direction='column'>
+		<Flex direction='column' mb='3'>
 			<ReactSelect
 				name={inputName}
 				value={value ? { label: value, value } : null}
