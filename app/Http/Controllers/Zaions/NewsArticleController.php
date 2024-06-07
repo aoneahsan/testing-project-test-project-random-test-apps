@@ -22,8 +22,8 @@ class NewsArticleController extends Controller
     {
         $queryParams = $request->query();
         $keyword = isset($queryParams['keyword']) ? $queryParams['keyword'] : null;
-        $category = isset($queryParams['category']) ? $queryParams['category'] : null;
-        $source = isset($queryParams['source']) ? $queryParams['source'] : null;
+        $category = isset($queryParams['category']) ? strtolower($queryParams['category']) : null;
+        $source = isset($queryParams['source']) ? strtolower($queryParams['source']) : null;
         $author = isset($queryParams['author']) ? $queryParams['author'] : null;
         $page = isset($queryParams['page']) ? $queryParams['page'] : 1;
         $pageSize = isset($queryParams['pageSize']) ? $queryParams['pageSize'] : 10;
@@ -72,10 +72,12 @@ class NewsArticleController extends Controller
         }
 
         return AppHelper::sendSuccessResponse([
-            'articlesFromNewsApiAi' => $articlesFromNewsApiAi,
-            'articlesFromNewsApiOrg' => $articlesFromNewsApiOrg,
-            'articlesFromNYTimesApi' => $articlesFromNYTimesApi,
-            'articlesFromTheGuardianApi' => $articlesFromTheGuardianApi
+            'data' => [
+                'articlesFromNewsApiAi' => $articlesFromNewsApiAi,
+                'articlesFromNewsApiOrg' => $articlesFromNewsApiOrg,
+                'articlesFromNYTimesApi' => $articlesFromNYTimesApi,
+                'articlesFromTheGuardianApi' => $articlesFromTheGuardianApi
+            ]
         ]);
     }
 
@@ -112,10 +114,12 @@ class NewsArticleController extends Controller
         }
 
         return AppHelper::sendSuccessResponse([
-            'articlesFromNewsApiAi' => $articlesFromNewsApiAi,
-            'articlesFromNewsApiOrg' => $articlesFromNewsApiOrg,
-            'articlesFromNYTimesApi' => $articlesFromNYTimesApi,
-            'articlesFromTheGuardianApi' => $articlesFromTheGuardianApi
+            'data' => [
+                'articlesFromNewsApiAi' => $articlesFromNewsApiAi,
+                'articlesFromNewsApiOrg' => $articlesFromNewsApiOrg,
+                'articlesFromNYTimesApi' => $articlesFromNYTimesApi,
+                'articlesFromTheGuardianApi' => $articlesFromTheGuardianApi
+            ]
         ]);
     }
 
@@ -140,9 +144,18 @@ class NewsArticleController extends Controller
             $query['dateEnd'] = $endDate;
         }
         if (strlen($category) > 0) {
-            $query['categoryUri'] = $category;
+            if ($category === 'entertainment') {
+                $query['categoryUri'] = 'news/Arts_and_Entertainment';
+            } else if ($category === 'sports') {
+                $query['categoryUri'] = 'news/Sports';
+            } else if ($category === 'entertainment') {
+                $query['categoryUri'] = 'dmoz/Business';
+            } else {
+                $query['categoryUri'] = $category;
+            }
         }
         if (strlen($source) > 0) {
+            $query['sourceUri'] = 'dailymail.co.uk';
             $query['sourceUri'] = $source;
         }
         if (strlen($authorUri) > 0) {
