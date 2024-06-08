@@ -133,162 +133,185 @@ class NewsArticleController extends Controller
 
     function fetchArticlesFromNewsApiAi($keyword = '', $category = '', $source = '', $authorUri = '', $page = 1, $pageSize = 10, $startDate = null, $endDate = null)
     {
-        $url = 'https://eventregistry.org/api/v1/article/getArticles';
-        $query = '?apiKey=' . env('NEWS_API_AI_APP_KEY') . '&resultType=articles&forceMaxDataTimeWindow=31&lang=eng&articlesPage=' . $page . '&articlesCount=' . $pageSize;
+        $apiKey = env('NEWS_API_AI_APP_KEY');
+        if ($apiKey) {
+            $url = 'https://eventregistry.org/api/v1/article/getArticles';
+            $query = '?apiKey=' . $apiKey . '&resultType=articles&forceMaxDataTimeWindow=31&lang=eng&articlesPage=' . $page . '&articlesCount=' . $pageSize;
 
-        if (strlen($keyword) > 0) {
-            $query = $query . '&keyword=' . $keyword;
-        }
-        if ($startDate) {
-            $query = $query . '&dateStart=' . $startDate;
-        }
-        if ($endDate) {
-            $query = $query . '&dateEnd=' . $endDate;
-        }
-        if (strlen($category) > 0) {
-            if ($category === 'entertainment') {
-                $query = $query . '&categoryUri=' . 'news/Arts_and_Entertainment';
-            } else if ($category === 'sports') {
-                $query = $query . '&categoryUri=' . 'news/Sports';
-            } else if ($category === 'entertainment') {
-                $query = $query . '&categoryUri=' . 'dmoz/Business';
-            } else {
-                $categories = explode(',', $category);
-                if (count($categories) > 1) {
-                    foreach ($categories as $cat) {
-                        if ($cat === 'entertainment') {
-                            $query = $query . '&categoryUri=' . 'news/Arts_and_Entertainment';
-                        } else if ($cat === 'sports') {
-                            $query = $query . '&categoryUri=' . 'news/Sports';
-                        } else if ($cat === 'entertainment') {
-                            $query = $query . '&categoryUri=' . 'dmoz/Business';
-                        } else {
-                            $query = $query . '&categoryUri=' . $cat;
+            if (strlen($keyword) > 0) {
+                $query = $query . '&keyword=' . $keyword;
+            }
+            if ($startDate) {
+                $query = $query . '&dateStart=' . $startDate;
+            }
+            if ($endDate) {
+                $query = $query . '&dateEnd=' . $endDate;
+            }
+            if (strlen($category) > 0) {
+                if ($category === 'entertainment') {
+                    $query = $query . '&categoryUri=' . 'news/Arts_and_Entertainment';
+                } else if ($category === 'sports') {
+                    $query = $query . '&categoryUri=' . 'news/Sports';
+                } else if ($category === 'entertainment') {
+                    $query = $query . '&categoryUri=' . 'dmoz/Business';
+                } else {
+                    $categories = explode(',', $category);
+                    if (count($categories) > 1) {
+                        foreach ($categories as $cat) {
+                            if ($cat === 'entertainment') {
+                                $query = $query . '&categoryUri=' . 'news/Arts_and_Entertainment';
+                            } else if ($cat === 'sports') {
+                                $query = $query . '&categoryUri=' . 'news/Sports';
+                            } else if ($cat === 'entertainment') {
+                                $query = $query . '&categoryUri=' . 'dmoz/Business';
+                            } else {
+                                $query = $query . '&categoryUri=' . $cat;
+                            }
                         }
+                    } else {
+                        $query = $query . '&categoryUri=' . $category;
+                    }
+                }
+            }
+            if (strlen($source) > 0) {
+                // adding few general sources, so we will get some data in frontend, once we improve the logic (which will take some time), we can remove this general source
+                $query = $query . '&sourceUri=' . 'dailymail.co.uk';
+                $query = $query . '&sourceUri=' . 'haberler.com';
+                $query = $query . '&sourceUri=' . 'marketscreener.com';
+                $query = $query . '&sourceUri=' . 'haberturk.com';
+                $query = $query . '&sourceUri=' . 'jagran.com';
+
+                $sources = explode(',', $source);
+                if (count($sources) > 1) {
+                    foreach ($sources as $item) {
+                        $query = $query . '&sourceUri=' . $item;
                     }
                 } else {
-                    $query = $query . '&categoryUri=' . $category;
+                    $query = $query . '&sourceUri=' . $source;
                 }
             }
-        }
-        if (strlen($source) > 0) {
-            // adding few general sources, so we will get some data in frontend, once we improve the logic (which will take some time), we can remove this general source
-            $query = $query . '&sourceUri=' . 'dailymail.co.uk';
-            $query = $query . '&sourceUri=' . 'haberler.com';
-            $query = $query . '&sourceUri=' . 'marketscreener.com';
-            $query = $query . '&sourceUri=' . 'haberturk.com';
-            $query = $query . '&sourceUri=' . 'jagran.com';
-
-            $sources = explode(',', $source);
-            if (count($sources) > 1) {
-                foreach ($sources as $item) {
-                    $query = $query . '&sourceUri=' . $item;
+            if (strlen($authorUri) > 0) {
+                $authors = explode(',', $authorUri);
+                if (count($authors) > 1) {
+                    foreach ($authors as $author) {
+                        $query = $query . '&authorUri=' . $author;
+                    }
+                } else {
+                    $query = $query . '&authorUri=' . $authorUri;
                 }
-            } else {
-                $query = $query . '&sourceUri=' . $source;
             }
+
+            $url = $url . $query;
+
+            $res = $this->client->get($url, [
+                'headers' => AppHelper::getApiRequestHeaders()
+            ]);
+
+            $data = json_decode($res->getBody()->getContents());
+
+            return ['data' => $data];
+        } else {
+            return ['data' => null];
         }
-        if (strlen($authorUri) > 0) {
-            $authors = explode(',', $authorUri);
-            if (count($authors) > 1) {
-                foreach ($authors as $author) {
-                    $query = $query . '&authorUri=' . $author;
-                }
-            } else {
-                $query = $query . '&authorUri=' . $authorUri;
-            }
-        }
-
-        $url = $url . $query;
-
-        $res = $this->client->get($url, [
-            'headers' => AppHelper::getApiRequestHeaders()
-        ]);
-
-        $data = json_decode($res->getBody()->getContents());
-
-        return ['data' => $data];
     }
 
     function fetchArticlesFromNewsApiOrg($keyword = '', $source = '', $page = 1, $pageSize = 10, $startDate = null, $endDate = null)
     {
-        $url = 'https://newsapi.org/v2/everything';
-        $query = '?apiKey=' . env('NEWS_API_ORG_APP_KEY') . '&language=en&page=' . $page . '&pageSize=' . $pageSize . '&searchIn=title,content';
+        $apiKey = env('NEWS_API_ORG_APP_KEY');
 
-        if ($keyword && strlen($keyword) > 0) {
-            $query = $query . '&q=' . $keyword;
+        if ($apiKey) {
+            $url = 'https://newsapi.org/v2/everything';
+            $query = '?apiKey=' . $apiKey . '&language=en&page=' . $page . '&pageSize=' . $pageSize . '&searchIn=title,content';
+
+            if ($keyword && strlen($keyword) > 0) {
+                $query = $query . '&q=' . $keyword;
+            } else {
+                // we need to pass something for parameter "q" for this API.
+                $user = Auth::user();
+                $query = $query . '&q=' . $user->newsSource . ' OR ' . $user->newsCategory . ' OR ' . $user->newsAuthor . ' OR ' . 'news';
+            }
+            if ($startDate) {
+                $query = $query . '&from=' . $startDate;
+            }
+            if ($endDate) {
+                $query = $query . '&to=' . $endDate;
+            }
+            if ($source && strlen($source) > 0) {
+                $query = $query . '&sources=' . $source;
+            }
+
+            $url = $url . $query;
+
+            $res = $this->client->get($url, [
+                'headers' => AppHelper::getApiRequestHeaders()
+            ]);
+
+            return ['data' => json_decode($res->getBody()->getContents())];
         } else {
-            // we need to pass something for parameter "q" for this API.
-            $user = Auth::user();
-            $query = $query . '&q=' . $user->newsSource . ' OR ' . $user->newsCategory . ' OR ' . $user->newsAuthor . ' OR ' . 'news';
+            return ['data' => null];
         }
-        if ($startDate) {
-            $query = $query . '&from=' . $startDate;
-        }
-        if ($endDate) {
-            $query = $query . '&to=' . $endDate;
-        }
-        if ($source && strlen($source) > 0) {
-            $query = $query . '&sources=' . $source;
-        }
-
-        $url = $url . $query;
-
-        $res = $this->client->get($url, [
-            'headers' => AppHelper::getApiRequestHeaders()
-        ]);
-
-        return ['data' => json_decode($res->getBody()->getContents())];
     }
 
     function fetchArticlesFromTheGuardianApi($keyword = '', $category = '', $page = 1, $pageSize = 10, $startDate = null, $endDate = null)
     {
-        $url = 'https://content.guardianapis.com/search';
-        $query = '?api-key=' . env('THE_GUARDIAN_APP_KEY') . '&format=json&lang=en&use-date=published&show-fields=headline,shortUrl,thumbnail,publication,bodyText&show-tags=keyword,publication,type&show-section=true&show-references=author&page=' . $page . '&page-size=' . $pageSize;
+        $apiKey = env('THE_GUARDIAN_APP_KEY');
 
-        if (strlen($keyword) > 0) {
-            $query = $query . '&q=' . $keyword;
-        }
-        if ($startDate) {
-            $query = $query . '&from-date=' . $startDate;
-        }
-        if ($endDate) {
-            $query = $query . '&to-date=' . $endDate;
-        }
-        if (strlen($category) > 0) {
-            $query = $query . '&section=' . $category;
-        }
+        if ($apiKey) {
+            $url = 'https://content.guardianapis.com/search';
+            $query = '?api-key=' . $apiKey . '&format=json&lang=en&use-date=published&show-fields=headline,shortUrl,thumbnail,publication,bodyText&show-tags=keyword,publication,type&show-section=true&show-references=author&page=' . $page . '&page-size=' . $pageSize;
 
-        $url = $url . $query;
+            if (strlen($keyword) > 0) {
+                $query = $query . '&q=' . $keyword;
+            }
+            if ($startDate) {
+                $query = $query . '&from-date=' . $startDate;
+            }
+            if ($endDate) {
+                $query = $query . '&to-date=' . $endDate;
+            }
+            if (strlen($category) > 0) {
+                $query = $query . '&section=' . $category;
+            }
 
-        $res = $this->client->get($url, [
-            'headers' => AppHelper::getApiRequestHeaders()
-        ]);
+            $url = $url . $query;
 
-        return ['data' => json_decode($res->getBody()->getContents())];
+            $res = $this->client->get($url, [
+                'headers' => AppHelper::getApiRequestHeaders()
+            ]);
+
+            return ['data' => json_decode($res->getBody()->getContents())];
+        } else {
+            return ['data' => null];
+        }
     }
 
     function fetchArticlesFromNYTimesApi($keyword = '', $page = 1, $pageSize = 10, $startDate = null, $endDate = null)
     {
-        $url = 'https://api.nytimes.com/svc/search/v2/articlesearch.json';
-        $query = '?api-key=' . env('NY_TIMES_APP_KEY') . '&format=json&lang=en&sort=relevance&fl=abstract,web_url,lead_paragraph,source,headline,section_name,_id&page=' . $page . '&page-size=' . $pageSize;
+        $apiKey = env('NY_TIMES_APP_KEY');
 
-        if (strlen($keyword) > 0) {
-            $query = $query . '&q=' . $keyword;
+        if ($apiKey) {
+            $url = 'https://api.nytimes.com/svc/search/v2/articlesearch.json';
+            $query = '?api-key=' . $apiKey . '&format=json&lang=en&sort=relevance&fl=abstract,web_url,lead_paragraph,source,headline,section_name,_id&page=' . $page . '&page-size=' . $pageSize;
+
+            if (strlen($keyword) > 0) {
+                $query = $query . '&q=' . $keyword;
+            }
+            if ($startDate) {
+                $query = $query . '&begin_date=' . Carbon::make($startDate)->format('Ymd'); // format required by API "20240606
+            }
+            if ($endDate) {
+                $query = $query . '&end_date=' . Carbon::make($endDate)->format('Ymd');
+            }
+
+            $url = $url . $query;
+
+            $res = $this->client->get($url, [
+                'headers' => AppHelper::getApiRequestHeaders()
+            ]);
+
+            return ['data' => json_decode($res->getBody()->getContents())];
+        } else {
+            return ['data' => null];
         }
-        if ($startDate) {
-            $query = $query . '&begin_date=' . Carbon::make($startDate)->format('Ymd');// format required by API "20240606
-        }
-        if ($endDate) {
-            $query = $query . '&end_date=' . Carbon::make($endDate)->format('Ymd');
-        }
-
-        $url = $url . $query;
-
-        $res = $this->client->get($url, [
-            'headers' => AppHelper::getApiRequestHeaders()
-        ]);
-
-        return ['data' => json_decode($res->getBody()->getContents())];
     }
 }
