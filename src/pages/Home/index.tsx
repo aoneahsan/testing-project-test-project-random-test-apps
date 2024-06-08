@@ -1,8 +1,8 @@
 import FullPageCenteredMessage from '@/components/FullPageCenteredMessage';
 import FullPageLoader from '@/components/FullPageLoader';
 import NewsGrid from '@/components/NewsGrid';
+import RefetchDataButton from '@/components/RefetchDataButton';
 import SearchArticlesFilters from '@/components/SearchArticlesFilters';
-import ErrorBoundary from '@/components/errors/ErrorBoundary';
 import { ReactQueryKeyEnum } from '@/enums/reactQuery';
 import { useGetRequest } from '@/hooks/reactQuery';
 import { searchedNewsArticlesRStateAtom } from '@/state/newsArticles';
@@ -14,7 +14,8 @@ import { reactQueryOptions } from '@/utils/constants/reactQuery';
 import { addQueryParamsInUrl, getSearchParamsData } from '@/utils/helpers';
 import { formatNewsArticlesData } from '@/utils/helpers/reactQuery/newsArticlesBackend';
 import { showErrorNotification } from '@/utils/helpers/reactToastify';
-import { useEffect } from 'react';
+import { Box } from '@radix-ui/themes';
+import { useCallback, useEffect } from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 
@@ -61,27 +62,34 @@ const Home: React.FC = () => {
 		}
 	}, [response, isFetching, isError]);
 
-	useEffect(() => {
-		refetch({
+	const onRefetchData = useCallback(async () => {
+		await refetch({
 			cancelRefetch: true,
 		});
-	}, [location.search]);
+	}, [refetch]);
 
-	if (isFetching) {
-		return <FullPageLoader />;
-	} else if (isError) {
+	useEffect(() => {
+		onRefetchData();
+	}, [location.search, onRefetchData]);
+
+	if (isError) {
 		return (
 			<FullPageCenteredMessage message='Error Occurred while fetching news articles, try again later.' />
 		);
-	} else if (response && response.data) {
+	} else {
 		return (
 			<>
 				<SearchArticlesFilters />
-				<NewsGrid newsArticles={searchedNewsArticlesRState} />
+				{isFetching ? (
+					<FullPageLoader />
+				) : (
+					<Box mt='4'>
+						<RefetchDataButton onClick={onRefetchData} />
+						<NewsGrid newsArticles={searchedNewsArticlesRState} />
+					</Box>
+				)}
 			</>
 		);
-	} else {
-		return <ErrorBoundary />;
 	}
 };
 

@@ -2,7 +2,7 @@ import FullPageCenteredMessage from '@/components/FullPageCenteredMessage';
 import FullPageLoader from '@/components/FullPageLoader';
 import NewsFeedPreferenceOptions from '@/components/NewsFeedPreferenceOptions';
 import NewsGrid from '@/components/NewsGrid';
-import ErrorBoundary from '@/components/errors/ErrorBoundary';
+import RefetchDataButton from '@/components/RefetchDataButton';
 import { NewsFeedContext } from '@/contextApi';
 import { ReactQueryKeyEnum } from '@/enums/reactQuery';
 import { useGetRequest } from '@/hooks/reactQuery';
@@ -12,7 +12,7 @@ import { INewsArticlesApiResponse } from '@/types/backendApi/newsArticlesBackend
 import { API_URLS } from '@/utils/constants';
 import { formatNewsArticlesData } from '@/utils/helpers/reactQuery/newsArticlesBackend';
 import { showErrorNotification } from '@/utils/helpers/reactToastify';
-import { Box, Button, Flex } from '@radix-ui/themes';
+import { Box } from '@radix-ui/themes';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { useRecoilState } from 'recoil';
 
@@ -48,7 +48,9 @@ const UserFeed: React.FC = () => {
 	}, [response, isFetching, isError]);
 
 	const onRefetchData = useCallback(async () => {
-		await refetch();
+		await refetch({
+			cancelRefetch: true,
+		});
 	}, [refetch]);
 
 	const newsFeedContextValue = useMemo(() => {
@@ -69,18 +71,7 @@ const UserFeed: React.FC = () => {
 					<FullPageLoader />
 				) : (
 					<Box mt='4'>
-						<Flex
-							justify='end'
-							align='center'
-							className='container'
-						>
-							<Button
-								onClick={onRefetchData}
-								className='w-full'
-							>
-								Refetch Data
-							</Button>
-						</Flex>
+						<RefetchDataButton onClick={onRefetchData} />
 						<NewsGrid newsArticles={newsFeedArticlesRState} />
 					</Box>
 				)}

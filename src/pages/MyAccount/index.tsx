@@ -31,7 +31,7 @@ const MyAccount: React.FC = () => {
 			<Flex
 				justify='center'
 				align='center'
-				minHeight='82vh'
+				minHeight='40vh'
 				direction='column'
 			>
 				<Card>

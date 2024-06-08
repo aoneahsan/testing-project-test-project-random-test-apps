@@ -39,7 +39,7 @@ const Register: React.FC = () => {
 			<Flex
 				justify='center'
 				align='center'
-				minHeight='100vh'
+				minHeight='80vh'
 				direction='column'
 			>
 				<Card>

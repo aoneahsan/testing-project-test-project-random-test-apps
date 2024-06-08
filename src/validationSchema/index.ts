@@ -1,6 +1,5 @@
 import {
 	LoginFormFieldsEnum,
-	NewsFeedPreferenceFormFieldsEnum,
 	RegisterFormFieldsEnum,
 	SearchArticlesFiltersFormFieldsEnum,
 	UserAccountDataFormFieldsEnum,
