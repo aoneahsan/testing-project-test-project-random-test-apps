@@ -1,8 +1,8 @@
 <?php
 
-use App\Http\Controllers\Zaions\AuthController;
-use App\Http\Controllers\Zaions\NewsArticleController;
-use App\Http\Controllers\Zaions\UserController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\NewsArticleController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::controller(AuthController::class)->group(function () {

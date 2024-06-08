@@ -1,13 +1,38 @@
 {
+    "name": "news-paper-app-backend-v1",
     "private": true,
+    "version": "1.0.0",
     "type": "module",
     "scripts": {
         "dev": "vite",
         "build": "vite build"
     },
     "devDependencies": {
-        "axios": "^1.6.4",
-        "laravel-vite-plugin": "^1.0.0",
-        "vite": "^5.0.0"
-    }
+        "axios": "^1.7.2",
+        "laravel-vite-plugin": "^1.0.4",
+        "vite": "^5.2.13"
+    },
+    "description": "NewsPaper App Developed using ReactJS and Laravel - Developed by Ahsan Mahmood - https://aoneahsan.com - https://linkedin.com/in/aoneahsan",
+    "author": {
+        "url": "https://linkedin.com/in/aoneahsan",
+        "email": "aoneahsan@gmail.com",
+        "name": "Ahsan Mahmood (Aoneahsan)"
+    },
+    "engines": {
+        "node": "^22.2.0"
+    },
+    "engineStrict": true,
+    "readme": "./Readme.md",
+    "displayName": "NewsPaper",
+    "keywords": [
+        "ahsan mahmood",
+        "newspaper",
+        "aoneahsan",
+        "laravel",
+        "reactjs",
+        "mysql",
+        "radix ui",
+        "formik",
+        "restful apis"
+    ]
 }

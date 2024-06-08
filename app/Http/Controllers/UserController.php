@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Zaions;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Zaions\UserResource;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Utils\AppHelper;
 use Carbon\Carbon;
