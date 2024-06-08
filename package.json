@@ -1,7 +1,7 @@
 {
 	"name": "news-paper-app-frontend-v1",
 	"private": true,
-	"version": "0.0.1",
+	"version": "1.0.0",
 	"type": "module",
 	"scripts": {
 		"start": "npm run dev",
@@ -68,5 +68,27 @@
 		"vite": "^5.2.12",
 		"vitest": "^1.6.0"
 	},
-	"description": "NewsPaper App Developed using ReactJS and Laravel - Developed by Ahsan Mahmood - Manager @ Zaions"
+	"description": "NewsPaper App Developed using ReactJS and Laravel - Developed by Ahsan Mahmood - https://aoneahsan.com - https://linkedin.com/in/aoneahsan",
+	"author": {
+		"url": "https://linkedin.com/in/aoneahsan",
+		"email": "aoneahsan@gmail.com",
+		"name": "Ahsan Mahmood (Aoneahsan)"
+	},
+	"engines": {
+		"node": "^22.2.0"
+	},
+	"engineStrict": true,
+	"readme": "./Readme.md",
+	"displayName": "NewsPaper",
+	"keywords": [
+		"ahsan mahmood",
+		"newspaper",
+		"aoneahsan",
+		"laravel",
+		"reactjs",
+		"mysql",
+		"radix ui",
+		"formik",
+		"restful apis"
+	]
 }
