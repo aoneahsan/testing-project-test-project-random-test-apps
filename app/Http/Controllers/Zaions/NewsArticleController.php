@@ -49,25 +49,29 @@ class NewsArticleController extends Controller
         // i did implemented the "GuzzleHttp\Promise" way here before, and it was fast, as i was calling all apis at the same time "async way, parallel api calls" but that way if one fails the whole API request fails even if all other API requests succeed.
         $articlesFromNewsApiAi = null;
         try {
-            $articlesFromNewsApiAi = $this->fetchArticlesFromNewsApiAi($keyword, $category, $source, $author, $page, $pageSize, $startDate, $endDate);
+            $articlesFromNewsApiAiRes = $this->fetchArticlesFromNewsApiAi($keyword, $category, $source, $author, $page, $pageSize, $startDate, $endDate);
+            $articlesFromNewsApiAi = $articlesFromNewsApiAiRes['data'];
         } catch (\Throwable $th) {
         }
 
         $articlesFromNewsApiOrg = null;
         try {
-            $articlesFromNewsApiOrg = $this->fetchArticlesFromNewsApiOrg($keyword, $source, $page, $pageSize, $startDate, $endDate);
+            $articlesFromNewsApiOrgRes = $this->fetchArticlesFromNewsApiOrg($keyword, $source, $page, $pageSize, $startDate, $endDate);
+            $articlesFromNewsApiOrg = $articlesFromNewsApiOrgRes['data'];
         } catch (\Throwable $th) {
         }
 
         $articlesFromTheGuardianApi = null;
         try {
-            $articlesFromTheGuardianApi = $this->fetchArticlesFromTheGuardianApi($keyword, $category, $page, $pageSize, $startDate, $endDate);
+            $articlesFromTheGuardianApiRes = $this->fetchArticlesFromTheGuardianApi($keyword, $category, $page, $pageSize, $startDate, $endDate);
+            $articlesFromTheGuardianApi = $articlesFromTheGuardianApiRes['data'];
         } catch (\Throwable $th) {
         }
 
         $articlesFromNYTimesApi = null;
         try {
-            $articlesFromNYTimesApi = $this->fetchArticlesFromNYTimesApi($keyword, $page, $pageSize, $startDate, $endDate);
+            $articlesFromNYTimesApiRes = $this->fetchArticlesFromNYTimesApi($keyword, $page, $pageSize, $startDate, $endDate);
+            $articlesFromNYTimesApi = $articlesFromNYTimesApiRes['data'];
         } catch (\Throwable $th) {
         }
 
@@ -89,57 +93,40 @@ class NewsArticleController extends Controller
         $newsCategories = $user->newsCategories;
         $newsAuthors = $user->newsAuthors;
 
-        $authors = null;
-        $query = [];
-        // if (strlen($newsAuthors) > 0) {
-        //     $authors = explode(',', $newsAuthors);
-        //     if (count($authors) > 1) {
-        //         foreach ($authors as $author) {
-        //             $query['authorUri'] = $author;
-        //         }
-        //     }
-        // }
-        $query['authorUri'] = $newsAuthors;
-
-        $articlesFromNewsApiAiRes = null;
         $articlesFromNewsApiAiData = null;
         try {
             $articlesFromNewsApiAiRes = $this->fetchArticlesFromNewsApiAi(null, $newsCategories, $newsSources, $newsAuthors);
             $articlesFromNewsApiAiData = $articlesFromNewsApiAiRes['data'];
-            unset($articlesFromNewsApiAiRes['data']);
         } catch (\Throwable $th) {
         }
 
         $articlesFromNewsApiOrg = null;
-        // try {
-        //     $articlesFromNewsApiOrg = $this->fetchArticlesFromNewsApiOrg(null, null);
-        // } catch (\Throwable $th) {
-        // }
+        try {
+            $articlesFromNewsApiOrgRes = $this->fetchArticlesFromNewsApiOrg(null, null);
+            $articlesFromNewsApiOrg = $articlesFromNewsApiOrgRes['data'];
+        } catch (\Throwable $th) {
+        }
 
         $articlesFromTheGuardianApi = null;
-        // try {
-        //     $articlesFromTheGuardianApi = $this->fetchArticlesFromTheGuardianApi(null, $newsCategories);
-        // } catch (\Throwable $th) {
-        // }
+        try {
+            $articlesFromTheGuardianApiRes = $this->fetchArticlesFromTheGuardianApi(null, $newsCategories);
+            $articlesFromTheGuardianApi = $articlesFromTheGuardianApiRes['data'];
+        } catch (\Throwable $th) {
+        }
 
         $articlesFromNYTimesApi = null;
-        // try {
-        //     $articlesFromNYTimesApi = $this->fetchArticlesFromNYTimesApi(null);
-        // } catch (\Throwable $th) {
-        // }
+        try {
+            $articlesFromNYTimesApiRes = $this->fetchArticlesFromNYTimesApi(null);
+            $articlesFromNYTimesApi = $articlesFromNYTimesApiRes['data'];
+        } catch (\Throwable $th) {
+        }
 
         return AppHelper::sendSuccessResponse([
             'data' => [
                 'articlesFromNewsApiAi' => $articlesFromNewsApiAiData,
                 'articlesFromNewsApiOrg' => $articlesFromNewsApiOrg,
                 'articlesFromNYTimesApi' => $articlesFromNYTimesApi,
-                'articlesFromTheGuardianApi' => $articlesFromTheGuardianApi,
-                'newsSources' => $newsSources,
-                'newsCategories' => $newsCategories,
-                'newsAuthors' => $newsAuthors,
-                'authors' => $authors,
-                'query' => $query,
-                'articlesFromNewsApiAiRes' => $articlesFromNewsApiAiRes
+                'articlesFromTheGuardianApi' => $articlesFromTheGuardianApi
             ]
         ]);
     }
@@ -220,110 +207,88 @@ class NewsArticleController extends Controller
 
         $data = json_decode($res->getBody()->getContents());
 
-        return ['data' => $data, 'url' => $url, 'query' => $query];
+        return ['data' => $data];
     }
 
     function fetchArticlesFromNewsApiOrg($keyword = '', $source = '', $page = 1, $pageSize = 10, $startDate = null, $endDate = null)
     {
-
-        $query = [
-            'apiKey' => env('NEWS_API_ORG_APP_KEY'),
-            'language' => 'en',
-            'page' => $page,
-            'pageSize' => $pageSize,
-            'searchIn' => 'title,content'
-        ];
+        $url = 'https://newsapi.org/v2/everything';
+        $query = '?apiKey=' . env('NEWS_API_ORG_APP_KEY') . '&language=en&page=' . $page . '&pageSize=' . $pageSize . '&searchIn=title,content';
 
         if ($keyword && strlen($keyword) > 0) {
-            $query['q'] = $keyword;
+            $query = $query . '&q=' . $keyword;
         } else {
             // we need to pass something for parameter "q" for this API.
             $user = Auth::user();
-            $query['q'] = $user->newsSource . ' OR ' . $user->newsCategory . ' OR ' . $user->newsAuthor . ' OR ' . 'news';
+            $query = $query . '&q=' . $user->newsSource . ' OR ' . $user->newsCategory . ' OR ' . $user->newsAuthor . ' OR ' . 'news';
         }
         if ($startDate) {
-            $query['from'] = $startDate;
+            $query = $query . '&from=' . $startDate;
         }
         if ($endDate) {
-            $query['to'] = $endDate;
+            $query = $query . '&to=' . $endDate;
         }
         if ($source && strlen($source) > 0) {
-            $query['sources'] = $source;
+            $query = $query . '&sources=' . $source;
         }
 
-        $res = $this->client->get('https://newsapi.org/v2/everything', [
-            'headers' => AppHelper::getApiRequestHeaders(),
-            'query' => $query
+        $url = $url . $query;
+
+        $res = $this->client->get($url, [
+            'headers' => AppHelper::getApiRequestHeaders()
         ]);
 
-        return json_decode($res->getBody()->getContents());
+        return ['data' => json_decode($res->getBody()->getContents())];
     }
 
     function fetchArticlesFromTheGuardianApi($keyword = '', $category = '', $page = 1, $pageSize = 10, $startDate = null, $endDate = null)
     {
-        $query = [
-            'api-key' => env('THE_GUARDIAN_APP_KEY'),
-            'format' => 'json',
-            'lang' => 'en',
-            'use-date' => 'published',
-            'page' => $page,
-            'page-size' => $pageSize,
-            // 'show-fields' => 'headline,body,shortUrl,thumbnail,publication,bodyText',
-            'show-fields' => 'headline,shortUrl,thumbnail,publication,bodyText',
-            'show-tags' => 'keyword,publication,type',
-            'show-section' => 'true',
-            'show-references' => 'author'
-        ];
+        $url = 'https://content.guardianapis.com/search';
+        $query = '?api-key=' . env('THE_GUARDIAN_APP_KEY') . '&format=json&lang=en&use-date=published&show-fields=headline,shortUrl,thumbnail,publication,bodyText&show-tags=keyword,publication,type&show-section=true&show-references=author&page=' . $page . '&page-size=' . $pageSize;
 
         if (strlen($keyword) > 0) {
-            $query['q'] = $keyword;
+            $query = $query . '&q=' . $keyword;
         }
         if ($startDate) {
-            $query['from-date'] = $startDate;
+            $query = $query . '&from-date=' . $startDate;
         }
         if ($endDate) {
-            $query['to-date'] = $endDate;
+            $query = $query . '&to-date=' . $endDate;
         }
         if (strlen($category) > 0) {
-            $query['section'] = $category;
+            $query = $query . '&section=' . $category;
         }
 
-        $res = $this->client->get('https://content.guardianapis.com/search', [
-            'headers' => AppHelper::getApiRequestHeaders(),
-            'query' => $query
+        $url = $url . $query;
+
+        $res = $this->client->get($url, [
+            'headers' => AppHelper::getApiRequestHeaders()
         ]);
 
-        return json_decode($res->getBody()->getContents());
+        return ['data' => json_decode($res->getBody()->getContents())];
     }
 
     function fetchArticlesFromNYTimesApi($keyword = '', $page = 1, $pageSize = 10, $startDate = null, $endDate = null)
     {
-        $query = [
-            'api-key' => env('NY_TIMES_APP_KEY'),
-            'format' => 'json',
-            'lang' => 'en',
-            'sort' => 'relevance',
-            'page' => $page,
-            'page-size' => $pageSize,
-            // 'fl' => 'abstract,web_url,lead_paragraph,source,multimedia,headline,section_name,byline',
-            'fl' => 'abstract,web_url,lead_paragraph,source,headline,section_name,_id', // not fetching the 'multimedia' and 'byline' as these two fields return long data arrays
-        ];
+        $url = 'https://api.nytimes.com/svc/search/v2/articlesearch.json';
+        $query = '?api-key=' . env('NY_TIMES_APP_KEY') . '&format=json&lang=en&sort=relevance&fl=abstract,web_url,lead_paragraph,source,headline,section_name,_id&page=' . $page . '&page-size=' . $pageSize;
 
         if (strlen($keyword) > 0) {
-            $query['q'] = $keyword;
+            $query = $query . '&q=' . $keyword;
         }
         if ($startDate) {
-            $query['begin_date'] = Carbon::make($startDate)->format('Ymd'); // format required by API "20240606
+            $query = $query . '&begin_date=' . Carbon::make($startDate)->format('Ymd');// format required by API "20240606
         }
         if ($endDate) {
-            $query['end_date'] = Carbon::make($endDate)->format('Ymd');
+            $query = $query . '&end_date=' . Carbon::make($endDate)->format('Ymd');
         }
 
-        $res = $this->client->get('https://api.nytimes.com/svc/search/v2/articlesearch.json', [
-            'headers' => AppHelper::getApiRequestHeaders(),
-            'query' => $query
+        $url = $url . $query;
+
+        $res = $this->client->get($url, [
+            'headers' => AppHelper::getApiRequestHeaders()
         ]);
 
-        return json_decode($res->getBody()->getContents());
+        return ['data' => json_decode($res->getBody()->getContents())];
     }
 }
