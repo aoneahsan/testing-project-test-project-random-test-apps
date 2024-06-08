@@ -9,7 +9,7 @@ use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class NewsArticleController extends Controller
+class NewsArticleControllerBackup extends Controller
 {
     private $client;
 
@@ -101,12 +101,9 @@ class NewsArticleController extends Controller
         // }
         $query['authorUri'] = $newsAuthors;
 
-        $articlesFromNewsApiAiRes = null;
-        $articlesFromNewsApiAiData = null;
+        $articlesFromNewsApiAi = null;
         try {
-            $articlesFromNewsApiAiRes = $this->fetchArticlesFromNewsApiAi(null, $newsCategories, $newsSources, $newsAuthors);
-            $articlesFromNewsApiAiData = $articlesFromNewsApiAiRes['data'];
-            unset($articlesFromNewsApiAiRes['data']);
+            $articlesFromNewsApiAi = $this->fetchArticlesFromNewsApiAi(null, $newsCategories, $newsSources, $newsAuthors);
         } catch (\Throwable $th) {
         }
 
@@ -130,7 +127,7 @@ class NewsArticleController extends Controller
 
         return AppHelper::sendSuccessResponse([
             'data' => [
-                'articlesFromNewsApiAi' => $articlesFromNewsApiAiData,
+                'articlesFromNewsApiAi' => $articlesFromNewsApiAi,
                 'articlesFromNewsApiOrg' => $articlesFromNewsApiOrg,
                 'articlesFromNYTimesApi' => $articlesFromNYTimesApi,
                 'articlesFromTheGuardianApi' => $articlesFromTheGuardianApi,
@@ -139,7 +136,6 @@ class NewsArticleController extends Controller
                 'newsAuthors' => $newsAuthors,
                 'authors' => $authors,
                 'query' => $query,
-                'articlesFromNewsApiAiRes' => $articlesFromNewsApiAiRes
             ]
         ]);
     }
@@ -147,80 +143,81 @@ class NewsArticleController extends Controller
     function fetchArticlesFromNewsApiAi($keyword = '', $category = '', $source = '', $authorUri = '', $page = 1, $pageSize = 10, $startDate = null, $endDate = null)
     {
         $url = 'https://eventregistry.org/api/v1/article/getArticles';
-        $query = '?apiKey=' . env('NEWS_API_AI_APP_KEY') . '&resultType=articles&forceMaxDataTimeWindow=31&lang=eng&articlesPage=' . $page . '&articlesCount=' . $pageSize;
+        $query = [
+            'apiKey' => env('NEWS_API_AI_APP_KEY'),
+            'resultType' => 'articles',
+            'forceMaxDataTimeWindow' => 31,
+            'lang' => 'eng',
+            'articlesPage' => $page,
+            'articlesCount' => $pageSize
+        ];
 
         if (strlen($keyword) > 0) {
-            $query = $query . '&keyword=' . $keyword;
+            $query['keyword'] = $keyword;
         }
         if ($startDate) {
-            $query = $query . '&dateStart=' . $startDate;
+            $query['dateStart'] = $startDate;
         }
         if ($endDate) {
-            $query = $query . '&dateEnd=' . $endDate;
+            $query['dateEnd'] = $endDate;
         }
-        if (strlen($category) > 0) {
-            if ($category === 'entertainment') {
-                $query = $query . '&categoryUri=' . 'news/Arts_and_Entertainment';
-            } else if ($category === 'sports') {
-                $query = $query . '&categoryUri=' . 'news/Sports';
-            } else if ($category === 'entertainment') {
-                $query = $query . '&categoryUri=' . 'dmoz/Business';
-            } else {
-                $categories = explode(',', $category);
-                if (count($categories) > 1) {
-                    foreach ($categories as $cat) {
-                        if ($cat === 'entertainment') {
-                            $query = $query . '&categoryUri=' . 'news/Arts_and_Entertainment';
-                        } else if ($cat === 'sports') {
-                            $query = $query . '&categoryUri=' . 'news/Sports';
-                        } else if ($cat === 'entertainment') {
-                            $query = $query . '&categoryUri=' . 'dmoz/Business';
-                        } else {
-                            $query = $query . '&categoryUri=' . $cat;
-                        }
-                    }
-                } else {
-                    $query = $query . '&categoryUri=' . $category;
-                }
-            }
-        }
-        if (strlen($source) > 0) {
-            // adding few general sources, so we will get some data in frontend, once we improve the logic (which will take some time), we can remove this general source
-            $query = $query . '&sourceUri=' . 'dailymail.co.uk';
-            $query = $query . '&sourceUri=' . 'haberler.com';
-            $query = $query . '&sourceUri=' . 'marketscreener.com';
-            $query = $query . '&sourceUri=' . 'haberturk.com';
-            $query = $query . '&sourceUri=' . 'jagran.com';
+        // if (strlen($category) > 0) {
+        //     if ($category === 'entertainment') {
+        //         $query['categoryUri'] = 'news/Arts_and_Entertainment';
+        //     } else if ($category === 'sports') {
+        //         $query['categoryUri'] = 'news/Sports';
+        //     } else if ($category === 'entertainment') {
+        //         $query['categoryUri'] = 'dmoz/Business';
+        //     } else {
+        //         $categories = explode(',', $category);
+        //         if (count($categories) > 1) {
+        //             foreach ($categories as $cat) {
+        //                 if ($cat === 'entertainment') {
+        //                     $query['categoryUri'] = 'news/Arts_and_Entertainment';
+        //                 } else if ($cat === 'sports') {
+        //                     $query['categoryUri'] = 'news/Sports';
+        //                 } else if ($cat === 'entertainment') {
+        //                     $query['categoryUri'] = 'dmoz/Business';
+        //                 } else {
+        //                     $query['categoryUri'] = $cat;
+        //                 }
+        //             }
+        //         } else {
+        //             $query['categoryUri'] = $category;
+        //         }
+        //     }
+        // }
+        // if (strlen($source) > 0) {
+        //     // adding a general source, once we improve the logic (which will take some time), we can remove this general source
+        //     $query['sourceUri'] = 'dailymail.co.uk';
 
-            $sources = explode(',', $source);
-            if (count($sources) > 1) {
-                foreach ($sources as $item) {
-                    $query = $query . '&sourceUri=' . $item;
-                }
-            } else {
-                $query = $query . '&sourceUri=' . $source;
-            }
-        }
+        //     $sources = explode(',', $source);
+        //     if (count($sources) > 1) {
+        //         foreach ($sources as $item) {
+        //             $query['sourceUri'] = $item;
+        //         }
+        //     } else {
+        //         $query['sourceUri'] = $source;
+        //     }
+        // }
         if (strlen($authorUri) > 0) {
-            $authors = explode(',', $authorUri);
-            if (count($authors) > 1) {
-                foreach ($authors as $author) {
-                    $query = $query . '&authorUri=' . $author;
-                }
-            } else {
-                $query = $query . '&authorUri=' . $authorUri;
-            }
+            // $authors = explode(',', $authorUri);
+            // if (count($authors) > 1) {
+            //     foreach ($authors as $author) {
+            //         $query['authorUri'] = $author;
+            //     }
+            // } else {
+                $query['authorUri'] = $authorUri;
+            // }
         }
 
-        $url = $url . $query;
 
         $res = $this->client->get($url, [
-            'headers' => AppHelper::getApiRequestHeaders()
+            'headers' => AppHelper::getApiRequestHeaders(),
+            // 'query' => $query
         ]);
 
-        $data = json_decode($res->getBody()->getContents());
-
-        return ['data' => $data, 'url' => $url, 'query' => $query];
+        return json_decode($res->getBody()->getContents());
     }
 
     function fetchArticlesFromNewsApiOrg($keyword = '', $source = '', $page = 1, $pageSize = 10, $startDate = null, $endDate = null)

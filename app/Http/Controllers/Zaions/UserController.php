@@ -30,9 +30,9 @@ class UserController extends Controller
 
             $user->update([
                 'name' => $request->has('name') ? $request->get('name') : $user->name,
-                'newsSources' => $request->has('newsSources') ? $request->get('newsSources') : $user->newsSources,
-                'newsCategories' => $request->has('newsCategories') ? $request->get('newsCategories') : $user->newsCategories,
-                'newsAuthors' => $request->has('newsAuthors') ? $request->get('newsAuthors') : $user->newsAuthors,
+                'newsSources' => $request->get('newsSources'),
+                'newsCategories' => $request->get('newsCategories'),
+                'newsAuthors' => $request->get('newsAuthors'),
             ]);
 
             $updatedUserData = User::where('id', '=', $user->id)->first();
