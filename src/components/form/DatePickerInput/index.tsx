@@ -32,7 +32,7 @@ const DatePickerInput: React.FC<IDatePickerInputProps> = ({
 	return (
 		<Flex
 			direction='column'
-			mb={isMobile ? '3' : '1'}
+			mb='3'
 			width={isMobile ? '100%' : '200px'}
 		>
 			<DatePicker

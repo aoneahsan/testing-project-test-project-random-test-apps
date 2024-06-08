@@ -57,9 +57,9 @@ const SearchArticlesFiltersContent: React.FC = () => {
 
 	return (
 		<>
-			<Card>
-				{isMobile ? (
-					<>
+			{isMobile ? (
+				<>
+					<Card>
 						<Flex
 							justify='between'
 							align={'center'}
@@ -67,15 +67,15 @@ const SearchArticlesFiltersContent: React.FC = () => {
 						>
 							{heading} {compState.isOpen ? <ArrowUpIcon /> : <ArrowDownIcon />}
 						</Flex>
-						{compState.isOpen ? content : null}
-					</>
-				) : (
-					<>
-						{heading}
-						{content}
-					</>
-				)}
-			</Card>
+					</Card>
+					{compState.isOpen ? content : null}
+				</>
+			) : (
+				<>
+					{heading}
+					{content}
+				</>
+			)}
 		</>
 	);
 };
@@ -196,7 +196,7 @@ const SearchArticlesFiltersForm: React.FC = () => {
 													: _fieldKey ===
 													  SearchArticlesFiltersFormFieldsEnum.source
 													? newsSourceSelectOptions
-													: null
+													: []
 											}
 										/>
 									);

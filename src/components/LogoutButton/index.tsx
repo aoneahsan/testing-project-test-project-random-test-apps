@@ -2,6 +2,7 @@ import { useDeleteRequest } from '@/hooks/reactQuery';
 import { useResponsiveScales } from '@/hooks/reactResponsive';
 import { userDataRStateAtom } from '@/state/userState';
 import { API_URLS } from '@/utils/constants';
+import { reactQueryKeys } from '@/utils/constants/reactQuery'
 import { clearAuthDataFromLocalStorage } from '@/utils/helpers';
 import {
 	showErrorNotification,
@@ -13,7 +14,7 @@ import { useSetRecoilState } from 'recoil';
 const LogoutButton: React.FC = () => {
 	const { isMobile, isTablet } = useResponsiveScales();
 	const setUserDataRState = useSetRecoilState(userDataRStateAtom);
-	const { mutateAsync: logoutUser } = useDeleteRequest();
+	const { mutateAsync: logoutUser } = useDeleteRequest(reactQueryKeys.mutation.logout);
 
 	const onLogout = async () => {
 		try {

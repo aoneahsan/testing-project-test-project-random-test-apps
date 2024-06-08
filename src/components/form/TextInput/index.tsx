@@ -45,7 +45,7 @@ const TextInput: React.FC<TextInputProps> = ({
 	};
 
 	return (
-		<Box mb={isMobile ? '3' : '1'}>
+		<Box mb='3'>
 			<TextField.Root
 				size='3'
 				placeholder={placeholder}

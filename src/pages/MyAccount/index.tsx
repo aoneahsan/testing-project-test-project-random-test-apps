@@ -7,6 +7,7 @@ import { IApiResponse } from '@/types/backendApi';
 import { IUser } from '@/types/userData';
 import { API_URLS } from '@/utils/constants';
 import { userAccountDataFormFields } from '@/utils/constants/formFields';
+import { reactQueryKeys } from '@/utils/constants/reactQuery'
 import {
 	formatFormErrorsFromApiResponse,
 	setAuthDataInLocalStorage,
@@ -62,7 +63,7 @@ const MyAccountForm: React.FC = () => {
 		}),
 		[userDataRState]
 	);
-	const { mutateAsync: updateUserData } = usePutRequest();
+	const { mutateAsync: updateUserData } = usePutRequest(reactQueryKeys.mutation.updateUserData);
 	const formValidationRState = useRecoilValue(formValidationRStateAtom);
 
 	return (

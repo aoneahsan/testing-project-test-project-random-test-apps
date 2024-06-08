@@ -1,11 +1,20 @@
 export const reactQueryKeys = {
-	user: {
-		getUserData: (userId: string) => [userId, 'getUserData'],
-		getNewsFeed: (userId: string) => [userId, 'getNewsFeed'],
+	query: {
+		user: {
+			getUserData: (userId: string) => [userId, 'getUserData'],
+			getNewsFeed: (userId: string) => [userId, 'getNewsFeed'],
+		},
+		newsArticles: {
+			searchNewsArticles: ['searchNewsArticles'],
+		},
 	},
-	newsArticles: {
-		searchNewsArticles: ['searchNewsArticles'],
-	},
+	mutation: {
+		login: ['login'],
+		register: ['register'],
+		logout: ['logout'],
+		updateUserData: ['updateUserData'],
+		updateUserStatus: ['updateUserStatus'],
+	}
 } as const;
 
 export const reactQueryOptions = {

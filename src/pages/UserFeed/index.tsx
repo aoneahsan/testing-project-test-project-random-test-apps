@@ -1,5 +1,6 @@
 import FullPageCenteredMessage from '@/components/FullPageCenteredMessage';
 import FullPageLoader from '@/components/FullPageLoader';
+import NewsFeedPreferenceOptions from '@/components/NewsFeedPreferenceOptions';
 import NewsGrid from '@/components/NewsGrid';
 import ErrorBoundary from '@/components/errors/ErrorBoundary';
 import { ReactQueryKeyEnum } from '@/enums/reactQuery';
@@ -10,6 +11,7 @@ import { INewsArticlesApiResponse } from '@/types/backendApi/newsArticlesBackend
 import { API_URLS } from '@/utils/constants';
 import { formatNewsArticlesData } from '@/utils/helpers/reactQuery/newsArticlesBackend';
 import { showErrorNotification } from '@/utils/helpers/reactToastify';
+import { Box } from '@radix-ui/themes'
 import React, { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 
@@ -52,7 +54,10 @@ const UserFeed: React.FC = () => {
 	} else if (response && response.data) {
 		return (
 			<>
-				<NewsGrid newsArticles={newsFeedArticlesRState} />
+				<NewsFeedPreferenceOptions />
+				<Box mt='4'>
+					<NewsGrid newsArticles={newsFeedArticlesRState} />
+				</Box>
 			</>
 		);
 	} else {

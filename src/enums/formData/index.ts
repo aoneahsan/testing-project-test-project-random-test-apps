@@ -21,3 +21,9 @@ export enum SearchArticlesFiltersFormFieldsEnum {
 	category = 'category',
 	source = 'source',
 }
+
+export enum NewsFeedPreferenceFormFieldsEnum {
+	categories = 'categories',
+	sources = 'sources',
+	authors = 'authors',
+}

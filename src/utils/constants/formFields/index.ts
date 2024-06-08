@@ -1,5 +1,6 @@
 import { FormFieldType } from '@/enums';
 import {
+	NewsFeedPreferenceFormFieldsEnum,
 	RegisterFormFieldsEnum,
 	SearchArticlesFiltersFormFieldsEnum,
 } from '@/enums/formData';
@@ -28,12 +29,14 @@ export const registerFormFields = {
 		placeholder: 'Password Confirmation',
 	},
 } as const;
+
 export const userAccountDataFormFields = {
 	[RegisterFormFieldsEnum.name]: {
 		type: FormFieldType.text,
 		placeholder: 'Name',
 	},
 } as const;
+
 export const searchArticlesFormFields = {
 	[SearchArticlesFiltersFormFieldsEnum.keyword]: {
 		type: FormFieldType.text,
@@ -67,6 +70,21 @@ export const searchArticlesFormFields = {
 	},
 } as const;
 
+export const newsFeedPreferenceFormFields = {
+	[NewsFeedPreferenceFormFieldsEnum.authors]: {
+		type: FormFieldType.select,
+		placeholder: 'Authors',
+	},
+	[NewsFeedPreferenceFormFieldsEnum.categories]: {
+		type: FormFieldType.select,
+		placeholder: 'Categories',
+	},
+	[NewsFeedPreferenceFormFieldsEnum.sources]: {
+		type: FormFieldType.select,
+		placeholder: 'Sources',
+	},
+} as const;
+
 export const newsCategorySelectOptions: ISelectOption[] = [
 	{
 		label: 'sports',
@@ -94,5 +112,16 @@ export const newsSourceSelectOptions: ISelectOption[] = [
 	{
 		label: 'abc-news',
 		value: 'abc-news',
+	},
+];
+
+export const newsAuthorSelectOptions: ISelectOption[] = [
+	{
+		label: 'ahsan',
+		value: 'ahsan',
+	},
+	{
+		label: 'zaions',
+		value: 'zaions',
 	},
 ];

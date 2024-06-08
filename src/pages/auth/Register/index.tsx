@@ -9,6 +9,7 @@ import { IApiResponse } from '@/types/backendApi';
 import { IUser } from '@/types/userData';
 import { API_URLS, APP_ROUTES } from '@/utils/constants';
 import { registerFormFields } from '@/utils/constants/formFields';
+import { reactQueryKeys } from '@/utils/constants/reactQuery';
 import {
 	formatFormErrorsFromApiResponse,
 	setAuthDataInLocalStorage,
@@ -82,7 +83,9 @@ const RegisterForm: React.FC = () => {
 		}),
 		[]
 	);
-	const { mutateAsync: registerUser } = usePostRequest();
+	const { mutateAsync: registerUser } = usePostRequest(
+		reactQueryKeys.mutation.register
+	);
 	const setUserDataRState = useSetRecoilState(userDataRStateAtom);
 	const formValidationRState = useRecoilValue(formValidationRStateAtom);
 

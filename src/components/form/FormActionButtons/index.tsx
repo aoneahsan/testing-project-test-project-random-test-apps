@@ -7,6 +7,7 @@ interface IFormActionButtonsProps {
 	resetButtonText?: string;
 	submitButtonText?: string;
 	onResetClicked?: () => void;
+	processing?: boolean;
 }
 const FormActionButtons: React.FC<IFormActionButtonsProps> = ({
 	resetButtonText,
@@ -14,6 +15,7 @@ const FormActionButtons: React.FC<IFormActionButtonsProps> = ({
 	showSubmitButton = true,
 	submitButtonText,
 	onResetClicked,
+	processing,
 }) => {
 	const { dirty, isValid } = useFormikContext();
 	return (
@@ -23,7 +25,7 @@ const FormActionButtons: React.FC<IFormActionButtonsProps> = ({
 					<Button
 						type={!!onResetClicked ? 'button' : 'reset'}
 						color='red'
-						disabled={onResetClicked ? false : !dirty}
+						disabled={processing || (onResetClicked ? false : !dirty)}
 						mr='4'
 						onClick={onResetClicked}
 					>
@@ -33,7 +35,7 @@ const FormActionButtons: React.FC<IFormActionButtonsProps> = ({
 				{showSubmitButton ? (
 					<Button
 						type='submit'
-						disabled={!isValid}
+						disabled={!isValid || processing}
 					>
 						{submitButtonText ?? 'Submit'}
 					</Button>

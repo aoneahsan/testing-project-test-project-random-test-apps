@@ -12,6 +12,7 @@ import { IApiResponse } from '@/types/backendApi';
 import { IUser } from '@/types/userData';
 import { useLocation } from 'react-router';
 import { ReactQueryKeyEnum } from '@/enums/reactQuery';
+import { reactQueryKeys } from '@/utils/constants/reactQuery'
 
 const AuthenticationHOC: React.FC<{
 	children: ReactNode;
@@ -20,7 +21,7 @@ const AuthenticationHOC: React.FC<{
 		processing: true,
 	});
 	const setUserDataRState = useSetRecoilState(userDataRStateAtom);
-	const { mutateAsync: updateUserStatus } = usePostRequest();
+	const { mutateAsync: updateUserStatus } = usePostRequest(reactQueryKeys.mutation.updateUserStatus);
 	const {
 		data: response,
 		isFetching,

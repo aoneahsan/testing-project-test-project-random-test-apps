@@ -12,6 +12,7 @@ import { getReactQueryKey } from '@/utils/helpers/reactQuery';
 import { MESSAGES } from '@/utils/messages';
 import { reportError } from '@/utils/reportError';
 import {
+	MutationKey,
 	QueryFilters,
 	useMutation,
 	useQuery,
@@ -21,12 +22,14 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 
 const useMutationRequest = (
 	method: RequestTypeEnum = RequestTypeEnum.post,
+	mutationKey: MutationKey,
 	queriesToInvalidate?: QueryFilters
 ) => {
 	const queryClient = useQueryClient();
 	const setUserDataRState = useSetRecoilState(userDataRStateAtom);
 
 	const _mutation = useMutation({
+		mutationKey: mutationKey,
 		mutationFn: async ({
 			url,
 			data,
@@ -90,16 +93,37 @@ const useMutationRequest = (
 	return _mutation;
 };
 
-export const usePostRequest = (queriesToInvalidate?: QueryFilters) => {
-	return useMutationRequest(RequestTypeEnum.post, queriesToInvalidate);
+export const usePostRequest = (
+	mutationKey: MutationKey,
+	queriesToInvalidate?: QueryFilters
+) => {
+	return useMutationRequest(
+		RequestTypeEnum.post,
+		mutationKey,
+		queriesToInvalidate
+	);
 };
 
-export const usePutRequest = (queriesToInvalidate?: QueryFilters) => {
-	return useMutationRequest(RequestTypeEnum.put, queriesToInvalidate);
+export const usePutRequest = (
+	mutationKey: MutationKey,
+	queriesToInvalidate?: QueryFilters
+) => {
+	return useMutationRequest(
+		RequestTypeEnum.put,
+		mutationKey,
+		queriesToInvalidate
+	);
 };
 
-export const useDeleteRequest = (queriesToInvalidate?: QueryFilters) => {
-	return useMutationRequest(RequestTypeEnum.delete, queriesToInvalidate);
+export const useDeleteRequest = (
+	mutationKey: MutationKey,
+	queriesToInvalidate?: QueryFilters
+) => {
+	return useMutationRequest(
+		RequestTypeEnum.delete,
+		mutationKey,
+		queriesToInvalidate
+	);
 };
 
 export const useGetRequest = (

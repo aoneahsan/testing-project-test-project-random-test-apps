@@ -7,11 +7,11 @@ export const getReactQueryKey = (
 	userData: IUser | null
 ) => {
 	if (key === ReactQueryKeyEnum.getUserData) {
-		return reactQueryKeys.user.getUserData(userData?.id ?? '');
+		return reactQueryKeys.query.user.getUserData(userData?.id ?? '');
 	} else if (key === ReactQueryKeyEnum.getNewsFeed) {
-		return reactQueryKeys.user.getNewsFeed(userData?.id ?? '');
+		return reactQueryKeys.query.user.getNewsFeed(userData?.id ?? '');
 	} else if (key === ReactQueryKeyEnum.searchNewsArticles) {
-		return reactQueryKeys.newsArticles.searchNewsArticles;
+		return reactQueryKeys.query.newsArticles.searchNewsArticles;
 	} else {
 		return [];
 	}

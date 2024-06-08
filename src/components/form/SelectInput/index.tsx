@@ -13,7 +13,8 @@ interface ISelectInputProps {
 	placeholder: string;
 	errorMessage?: string;
 	isTouched?: boolean;
-	options: ISelectOption[] | null;
+	options: ISelectOption[];
+	isMulti?: boolean;
 }
 
 const SelectInput: React.FC<ISelectInputProps> = ({
@@ -23,28 +24,58 @@ const SelectInput: React.FC<ISelectInputProps> = ({
 	errorMessage,
 	isTouched,
 	options,
+	isMulti,
 }) => {
 	const { isMobile } = useResponsiveScales();
 	const { setFieldValue, handleBlur } =
 		useFormikContext<ISearchArticlesFiltersFormData>();
 
+	if (options?.length <= 0) {
+		return null;
+	}
+
 	return (
 		<Flex
 			direction='column'
-			mb={isMobile ? '3' : '1'}
+			mb='3'
 		>
 			<ReactSelect
 				name={inputName}
-				value={value ? { label: value, value } : null}
+				value={
+					value
+						? isMulti
+							? value.split(',').map((el) => ({ label: el, value: el }))
+							: { label: value, value }
+						: null
+				}
 				placeholder={placeholder}
 				options={options ?? []}
 				onBlur={handleBlur}
 				onChange={(val) => {
-					const _val = val as unknown as ISelectOption;
-					setFieldValue(inputName, _val.value, true);
+					if (
+						(!isMulti && val) ||
+						(isMulti && (val as unknown as ISelectOption[]).length > 0)
+					) {
+						let _val;
+						if (isMulti) {
+							_val = (val as unknown as ISelectOption[])
+								.map((el) => el.value)
+								.join(',');
+						} else {
+							_val = (val as unknown as ISelectOption).value;
+						}
+
+						if (_val) {
+							setFieldValue(inputName, _val, true);
+						}
+					} else {
+						setFieldValue(inputName, undefined, true);
+					}
 				}}
 				className={isMobile ? '' : 'input-width'}
 				isClearable
+				isMulti={isMulti}
+				isSearchable
 			/>
 			{isTouched && errorMessage ? (
 				<Text

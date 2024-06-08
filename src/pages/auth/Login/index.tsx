@@ -9,6 +9,7 @@ import { IApiResponse } from '@/types/backendApi';
 import { IUser } from '@/types/userData';
 import { API_URLS, APP_ROUTES } from '@/utils/constants';
 import { loginFormFields } from '@/utils/constants/formFields';
+import { reactQueryKeys } from '@/utils/constants/reactQuery';
 import {
 	formatFormErrorsFromApiResponse,
 	setAuthDataInLocalStorage,
@@ -81,7 +82,9 @@ const LoginForm: React.FC = () => {
 		}),
 		[]
 	);
-	const { mutateAsync: loginUser } = usePostRequest();
+	const { mutateAsync: loginUser } = usePostRequest(
+		reactQueryKeys.mutation.login
+	);
 	const setUserDataRState = useSetRecoilState(userDataRStateAtom);
 	const formValidationRState = useRecoilValue(formValidationRStateAtom);
 
