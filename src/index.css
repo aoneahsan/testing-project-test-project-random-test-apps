@@ -23,3 +23,6 @@ html {
 .input-width {
 	width: 200px;
 }
+.w-full {
+	width: 100%;
+}

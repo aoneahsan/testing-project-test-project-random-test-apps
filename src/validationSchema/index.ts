@@ -94,9 +94,3 @@ export const searchArticlesFormValidationSchema = ZOD.object({
 		}
 	}
 });
-
-export const newsFeedPreferenceFormValidationSchema = ZOD.object({
-	[NewsFeedPreferenceFormFieldsEnum.categories]: ZOD.string().trim().max(255),
-	[NewsFeedPreferenceFormFieldsEnum.sources]: ZOD.string().trim().max(255),
-	[NewsFeedPreferenceFormFieldsEnum.authors]: ZOD.string().trim().max(255),
-});

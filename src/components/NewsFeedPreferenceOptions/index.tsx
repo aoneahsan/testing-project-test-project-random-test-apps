@@ -1,9 +1,7 @@
 import { Box, Card, Flex, Heading } from '@radix-ui/themes';
 import { Form, Formik } from 'formik';
-import { useMemo, useState } from 'react';
+import { useContext, useMemo, useState } from 'react';
 import { NewsFeedPreferenceFormFieldsEnum } from '@/enums/formData';
-import { ZodError } from 'zod';
-import { newsFeedPreferenceFormValidationSchema } from '@/validationSchema';
 import {
 	newsCategorySelectOptions,
 	newsSourceSelectOptions,
@@ -31,8 +29,12 @@ import {
 import { useRecoilState } from 'recoil';
 import { userDataRStateAtom } from '@/state/userState';
 import { reactQueryKeys } from '@/utils/constants/reactQuery';
+import { NewsFeedContext } from '@/contextApi';
+import { useIsFetching } from '@tanstack/react-query';
+import { getReactQueryKey } from '@/utils/helpers/reactQuery';
+import { ReactQueryKeyEnum } from '@/enums/reactQuery';
 
-const NewsFeedPreferenceOptions: React.FC = () => {
+const NewsFeedPreferenceOptions: React.FC = ({}) => {
 	return (
 		<Box
 			className='container'
@@ -99,31 +101,32 @@ const NewsFeedPreferenceOptionsForm: React.FC = () => {
 	const { mutateAsync: updateUserData, isPending } = usePutRequest(
 		reactQueryKeys.mutation.updateUserData
 	);
+	const newsFeedContextState = useContext(NewsFeedContext);
+	const processingApiRequest =
+		useIsFetching({
+			queryKey: getReactQueryKey(ReactQueryKeyEnum.getNewsFeed),
+		}) > 0;
+	const disableFormActions = isPending || processingApiRequest;
 
 	const initialValues = useMemo(
 		() => ({
-			[NewsFeedPreferenceFormFieldsEnum.authors]: '',
-			[NewsFeedPreferenceFormFieldsEnum.categories]: '',
-			[NewsFeedPreferenceFormFieldsEnum.sources]: '',
+			[NewsFeedPreferenceFormFieldsEnum.authors]:
+				userDataRState?.newsAuthors ?? '',
+			[NewsFeedPreferenceFormFieldsEnum.categories]:
+				userDataRState?.newsCategories ?? '',
+			[NewsFeedPreferenceFormFieldsEnum.sources]:
+				userDataRState?.newsSources ?? '',
 		}),
-		// TODO: this will depend on userData and will set default values from there
-		[]
+		[
+			userDataRState?.newsSources,
+			userDataRState?.newsCategories,
+			userDataRState?.newsAuthors,
+		]
 	);
-
-	console.log({ userDataRState });
 
 	return (
 		<Formik
 			initialValues={initialValues}
-			validate={(values) => {
-				try {
-					newsFeedPreferenceFormValidationSchema.parse(values);
-				} catch (error) {
-					if (error instanceof ZodError) {
-						return error.formErrors.fieldErrors;
-					}
-				}
-			}}
 			onSubmit={async (values, { setErrors }) => {
 				const reqData = JSON.stringify({
 					newsSources: values[NewsFeedPreferenceFormFieldsEnum.sources],
@@ -152,9 +155,13 @@ const NewsFeedPreferenceOptionsForm: React.FC = () => {
 						if (userData) {
 							await setAuthDataInLocalStorage({ userData });
 
-							showSuccessNotification();
-
 							setUserDataRState(userData);
+
+							if (newsFeedContextState.refetchOnUpdate) {
+								await newsFeedContextState.refetchOnUpdate();
+							}
+
+							showSuccessNotification();
 						} else {
 							showErrorNotification(MESSAGES.backendApi.invalidUserData);
 						}
@@ -162,8 +169,6 @@ const NewsFeedPreferenceOptionsForm: React.FC = () => {
 				} catch (error) {
 					showErrorNotification();
 				}
-
-				// TODO: call api and set user data
 			}}
 			enableReinitialize
 		>
@@ -201,10 +206,11 @@ const NewsFeedPreferenceOptionsForm: React.FC = () => {
 												: []
 										}
 										isMulti
+										disabled={disableFormActions}
 									/>
 								);
 							})}
-							<FormActionButtons processing={isPending} />
+							<FormActionButtons processing={disableFormActions} />
 						</Flex>
 					</Form>
 				);

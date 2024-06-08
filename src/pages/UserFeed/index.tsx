@@ -3,6 +3,7 @@ import FullPageLoader from '@/components/FullPageLoader';
 import NewsFeedPreferenceOptions from '@/components/NewsFeedPreferenceOptions';
 import NewsGrid from '@/components/NewsGrid';
 import ErrorBoundary from '@/components/errors/ErrorBoundary';
+import { NewsFeedContext } from '@/contextApi';
 import { ReactQueryKeyEnum } from '@/enums/reactQuery';
 import { useGetRequest } from '@/hooks/reactQuery';
 import { newsFeedArticlesRStateAtom } from '@/state/newsArticles';
@@ -11,8 +12,8 @@ import { INewsArticlesApiResponse } from '@/types/backendApi/newsArticlesBackend
 import { API_URLS } from '@/utils/constants';
 import { formatNewsArticlesData } from '@/utils/helpers/reactQuery/newsArticlesBackend';
 import { showErrorNotification } from '@/utils/helpers/reactToastify';
-import { Box } from '@radix-ui/themes'
-import React, { useEffect } from 'react';
+import { Box, Button, Flex } from '@radix-ui/themes';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { useRecoilState } from 'recoil';
 
 const UserFeed: React.FC = () => {
@@ -23,6 +24,7 @@ const UserFeed: React.FC = () => {
 		data: response,
 		isFetching,
 		isError,
+		refetch,
 	} = useGetRequest(API_URLS.getNewsFeed, ReactQueryKeyEnum.getNewsFeed);
 
 	useEffect(() => {
@@ -45,23 +47,45 @@ const UserFeed: React.FC = () => {
 		}
 	}, [response, isFetching, isError]);
 
-	if (isFetching) {
-		return <FullPageLoader />;
-	} else if (isError) {
+	const onRefetchData = useCallback(async () => {
+		await refetch();
+	}, [refetch]);
+
+	const newsFeedContextValue = useMemo(() => {
+		return { refetchOnUpdate: onRefetchData };
+	}, [onRefetchData]);
+
+	if (isError) {
 		return (
 			<FullPageCenteredMessage message='Error Occurred while fetching news feed articles, try again later.' />
 		);
-	} else if (response && response.data) {
+	} else {
 		return (
 			<>
-				<NewsFeedPreferenceOptions />
-				<Box mt='4'>
-					<NewsGrid newsArticles={newsFeedArticlesRState} />
-				</Box>
+				<NewsFeedContext.Provider value={newsFeedContextValue}>
+					<NewsFeedPreferenceOptions />
+				</NewsFeedContext.Provider>
+				{isFetching ? (
+					<FullPageLoader />
+				) : (
+					<Box mt='4'>
+						<Flex
+							justify='end'
+							align='center'
+							className='container'
+						>
+							<Button
+								onClick={onRefetchData}
+								className='w-full'
+							>
+								Refetch Data
+							</Button>
+						</Flex>
+						<NewsGrid newsArticles={newsFeedArticlesRState} />
+					</Box>
+				)}
 			</>
 		);
-	} else {
-		return <ErrorBoundary />;
 	}
 };
 export default UserFeed;

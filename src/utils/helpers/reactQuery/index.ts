@@ -4,7 +4,7 @@ import { reactQueryKeys } from '@/utils/constants/reactQuery';
 
 export const getReactQueryKey = (
 	key: ReactQueryKeyEnum,
-	userData: IUser | null
+	userData?: IUser | null
 ) => {
 	if (key === ReactQueryKeyEnum.getUserData) {
 		return reactQueryKeys.query.user.getUserData(userData?.id ?? '');

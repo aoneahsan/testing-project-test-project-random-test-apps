@@ -115,13 +115,18 @@ export const newsSourceSelectOptions: ISelectOption[] = [
 	},
 ];
 
+// for now i'm going with authorUri for both "label" and "value", but we can improve it and show different user friendly "labels" and attach them to these uris
 export const newsAuthorSelectOptions: ISelectOption[] = [
 	{
-		label: 'ahsan',
-		value: 'ahsan',
+		label: 'associated_press@mymcmurray.com',
+		value: 'associated_press@mymcmurray.com',
 	},
 	{
-		label: 'zaions',
-		value: 'zaions',
+		label: 'abp_live@abplive.com',
+		value: 'abp_live@abplive.com',
+	},
+	{
+		label: 'associated_press@dailyherald.com',
+		value: 'associated_press@dailyherald.com',
 	},
 ];

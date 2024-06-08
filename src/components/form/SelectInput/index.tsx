@@ -15,6 +15,7 @@ interface ISelectInputProps {
 	isTouched?: boolean;
 	options: ISelectOption[];
 	isMulti?: boolean;
+	disabled?: boolean;
 }
 
 const SelectInput: React.FC<ISelectInputProps> = ({
@@ -25,6 +26,7 @@ const SelectInput: React.FC<ISelectInputProps> = ({
 	isTouched,
 	options,
 	isMulti,
+	disabled,
 }) => {
 	const { isMobile } = useResponsiveScales();
 	const { setFieldValue, handleBlur } =
@@ -41,6 +43,7 @@ const SelectInput: React.FC<ISelectInputProps> = ({
 		>
 			<ReactSelect
 				name={inputName}
+				isDisabled={disabled}
 				value={
 					value
 						? isMulti
