@@ -19,10 +19,12 @@ html {
 	width: 90%;
 	margin: 0 auto;
 }
-
 .input-width {
 	width: 200px;
 }
 .w-full {
 	width: 100%;
+}
+.object-cover {
+	object-fit: cover;
 }
