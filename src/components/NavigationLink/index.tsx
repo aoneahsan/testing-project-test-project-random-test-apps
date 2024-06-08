@@ -1,10 +1,10 @@
+import { useResponsiveScales } from '@/hooks/reactResponsive';
 import { userIsAuthenticatedRStateSelector } from '@/state/userState';
 import { APP_ROUTES } from '@/utils/constants';
 import { Button } from '@radix-ui/themes';
 import { matchRoutes, useLocation } from 'react-router';
 import { Link } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
-import { useMediaQuery } from 'react-responsive';
 
 interface INavigationLinkProps {
 	path: string;
@@ -17,6 +17,7 @@ const NavigationLink: React.FC<INavigationLinkProps> = ({
 	label,
 	path,
 }) => {
+	const { isMobile, isTablet } = useResponsiveScales();
 	const location = useLocation();
 	const userIsAuthenticatedRState = useRecoilValue(
 		userIsAuthenticatedRStateSelector
@@ -32,13 +33,6 @@ const NavigationLink: React.FC<INavigationLinkProps> = ({
 		location
 	);
 
-	const isDesktop = useMediaQuery({
-		minWidth: '901px',
-	});
-	const isMobile = useMediaQuery({
-		maxWidth: '700px',
-	});
-
 	const currentActiveRoute = routesMatch && routesMatch[0].pathname;
 	const isCurrentPathActive = currentActiveRoute === path;
 
@@ -50,7 +44,7 @@ const NavigationLink: React.FC<INavigationLinkProps> = ({
 	} else {
 		return (
 			<Button
-				size={isDesktop ? '3' : '2'}
+				size={isTablet ? '3' : '2'}
 				mr='2'
 				color={isCurrentPathActive ? 'teal' : undefined}
 				asChild

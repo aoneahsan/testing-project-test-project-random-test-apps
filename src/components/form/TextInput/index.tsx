@@ -8,6 +8,7 @@ import { Box, IconButton, Text, TextField } from '@radix-ui/themes';
 import { useFormikContext } from 'formik';
 import { EyeOpenIcon, EyeClosedIcon } from '@radix-ui/react-icons';
 import { useState } from 'react';
+import { useResponsiveScales } from '@/hooks/reactResponsive'
 
 interface TextInputProps {
 	inputName: string;
@@ -28,6 +29,7 @@ const TextInput: React.FC<TextInputProps> = ({
 	isTouched,
 	showValidState = true,
 }) => {
+	const { isMobile } = useResponsiveScales();
 	const [compState, setCompState] = useState<{ showPassword: boolean }>({
 		showPassword: false,
 	});
@@ -43,7 +45,7 @@ const TextInput: React.FC<TextInputProps> = ({
 	};
 
 	return (
-		<Box mb='3'>
+		<Box mb={isMobile ? '3' : '1'}>
 			<TextField.Root
 				size='3'
 				placeholder={placeholder}

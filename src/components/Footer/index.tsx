@@ -3,9 +3,10 @@ import './styles.css';
 import { developerDetails } from '@/utils/constants';
 import { LinkTargetEnum } from '@/enums';
 import { useMemo } from 'react';
-import { useMediaQuery } from 'react-responsive';
+import { useResponsiveScales } from '@/hooks/reactResponsive';
 
 const Footer: React.FC = () => {
+	const { isMobile } = useResponsiveScales();
 	const links = useMemo(() => {
 		return [
 			{
@@ -26,9 +27,7 @@ const Footer: React.FC = () => {
 			},
 		];
 	}, []);
-	const isMobile = useMediaQuery({
-		maxWidth: '700px',
-	});
+
 	return (
 		<>
 			<Box

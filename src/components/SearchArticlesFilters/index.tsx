@@ -1,7 +1,7 @@
-import { Box, Flex, Heading } from '@radix-ui/themes';
+import { Box, Card, Flex, Heading } from '@radix-ui/themes';
 import TextInput from '@/components/form/TextInput';
 import { Form, Formik } from 'formik';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { SearchArticlesFiltersFormFieldsEnum } from '@/enums/formData';
 import { ZodError } from 'zod';
 import { searchArticlesFormValidationSchema } from '@/validationSchema';
@@ -17,6 +17,8 @@ import DatePickerInput from '../form/DatePickerInput';
 import { getSearchParamsData, setSearchParamsData } from '@/utils/helpers';
 import { ISearchArticlesFiltersSearchParams } from '@/types/searchParams';
 import SelectInput from '../form/SelectInput';
+import { useResponsiveScales } from '@/hooks/reactResponsive';
+import { ArrowDownIcon, ArrowUpIcon } from '@radix-ui/react-icons';
 
 const SearchArticlesFilters: React.FC = () => {
 	return (
@@ -24,18 +26,62 @@ const SearchArticlesFilters: React.FC = () => {
 			className='container'
 			pt='4'
 		>
-			<Heading
-				size='4'
-				mb='2'
-			>
-				Search Filters
-			</Heading>
-			<SearchArticlesFiltersForm />
+			<SearchArticlesFiltersContent />
 		</Box>
 	);
 };
 
+const SearchArticlesFiltersContent: React.FC = () => {
+	const { isMobile } = useResponsiveScales();
+	const [compState, setCompState] = useState<{ isOpen: boolean }>({
+		isOpen: false,
+	});
+
+	const heading = useMemo(() => {
+		return <Heading size='4'>Search Filters</Heading>;
+	}, []);
+	const content = useMemo(() => {
+		return (
+			<Box mt='3'>
+				<SearchArticlesFiltersForm />
+			</Box>
+		);
+	}, []);
+
+	const toggleAccordionState = () => {
+		setCompState((oldState) => ({
+			...oldState,
+			isOpen: !oldState.isOpen,
+		}));
+	};
+
+	return (
+		<>
+			<Card>
+				{isMobile ? (
+					<>
+						<Flex
+							justify='between'
+							align={'center'}
+							onClick={toggleAccordionState}
+						>
+							{heading} {compState.isOpen ? <ArrowUpIcon /> : <ArrowDownIcon />}
+						</Flex>
+						{compState.isOpen ? content : null}
+					</>
+				) : (
+					<>
+						{heading}
+						{content}
+					</>
+				)}
+			</Card>
+		</>
+	);
+};
+
 const SearchArticlesFiltersForm: React.FC = () => {
+	const { isMobile } = useResponsiveScales();
 	const [_searchParams, _setSearchParams] = useSearchParams();
 	const searchParamsData =
 		getSearchParamsData<ISearchArticlesFiltersSearchParams>(_searchParams);
@@ -97,12 +143,14 @@ const SearchArticlesFiltersForm: React.FC = () => {
 			}}
 			enableReinitialize
 		>
-			{({ values, errors, touched, setValues }) => {
+			{({ values, errors, touched }) => {
 				return (
 					<Form>
 						<Flex
 							justify='between'
+							align={isMobile ? 'stretch' : 'center'}
 							wrap='wrap'
+							direction={isMobile ? 'column' : 'row'}
 						>
 							{(
 								Object.keys(

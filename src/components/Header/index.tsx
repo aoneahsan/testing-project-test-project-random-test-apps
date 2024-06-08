@@ -7,9 +7,10 @@ import NavigationLink from '../NavigationLink';
 import { useRecoilValue } from 'recoil';
 import { userIsAuthenticatedRStateSelector } from '@/state/userState';
 import LogoutButton from '../LogoutButton';
-import { useMediaQuery } from 'react-responsive';
+import { useResponsiveScales } from '@/hooks/reactResponsive'
 
 const Header: React.FC = () => {
+	const { isMobile } = useResponsiveScales();
 	const links = useMemo(() => {
 		return [
 			{
@@ -42,9 +43,6 @@ const Header: React.FC = () => {
 	const userIsAuthenticatedRState = useRecoilValue(
 		userIsAuthenticatedRStateSelector
 	);
-	const isMobile = useMediaQuery({
-		maxWidth: '700px',
-	});
 
 	return (
 		<>

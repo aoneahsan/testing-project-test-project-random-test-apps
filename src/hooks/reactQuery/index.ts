@@ -3,6 +3,7 @@ import { RequestTypeEnum } from '@/enums';
 import { ResponseStatusEnum } from '@/enums/backendApi';
 import { ReactQueryKeyEnum } from '@/enums/reactQuery';
 import { userDataRStateAtom } from '@/state/userState';
+import { reactQueryOptions } from '@/utils/constants/reactQuery';
 import {
 	clearAuthDataFromLocalStorage,
 	getAuthTokenFromLocalStorage,
@@ -105,7 +106,7 @@ export const useGetRequest = (
 	url: string,
 	_queryKey: ReactQueryKeyEnum,
 	isAuthenticatedRequest: boolean = true,
-	staleTime?: number
+	staleTime: number = reactQueryOptions.staleTime.fiveMinutes
 ) => {
 	const [userDataRState, setUserDataRState] =
 		useRecoilState(userDataRStateAtom);
@@ -137,7 +138,7 @@ export const useGetRequest = (
 			}
 		},
 		refetchOnReconnect: true,
-		refetchOnWindowFocus: true,
+		refetchOnWindowFocus: false,
 		throwOnError: true,
 		retry: 2,
 		staleTime: staleTime,

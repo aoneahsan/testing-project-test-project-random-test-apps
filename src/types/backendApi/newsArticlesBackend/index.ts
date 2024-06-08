@@ -1,4 +1,5 @@
-export interface ISearchNewsArticlesApiResponse {
+// the response for "SearchNewsArticles" and "GetNewsFeed" API is same
+export interface INewsArticlesApiResponse {
 	articlesFromNewsApiAi: ArticlesFromNewsAPIAI | null;
 	articlesFromNewsApiOrg: ArticlesFromNewsAPIOrg | null;
 	articlesFromNYTimesApi: ArticlesFromNYTimesAPI | null;

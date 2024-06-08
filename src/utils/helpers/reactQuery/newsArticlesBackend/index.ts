@@ -4,13 +4,13 @@ import {
 	ArticlesFromNewsAPIAI,
 	ArticlesFromNewsAPIOrg,
 	ArticlesFromTheGuardianAPI,
-	ISearchNewsArticlesApiResponse,
+	INewsArticlesApiResponse,
 } from '@/types/backendApi/newsArticlesBackend';
 import { INewsItem } from '@/types/newsArticlesFrontend';
 import { getRandomId, truncateText } from '@/utils/helpers';
 
 export const formatNewsArticlesData = (
-	data: ISearchNewsArticlesApiResponse
+	data: INewsArticlesApiResponse
 ): INewsItem[] => {
 	const newsArticles: INewsItem[] = [];
 

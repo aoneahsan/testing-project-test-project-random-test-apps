@@ -1,3 +1,4 @@
+import { useResponsiveScales } from '@/hooks/reactResponsive';
 import {
 	ISearchArticlesFiltersFormData,
 	ISelectOption,
@@ -23,11 +24,15 @@ const SelectInput: React.FC<ISelectInputProps> = ({
 	isTouched,
 	options,
 }) => {
+	const { isMobile } = useResponsiveScales();
 	const { setFieldValue, handleBlur } =
 		useFormikContext<ISearchArticlesFiltersFormData>();
 
 	return (
-		<Flex direction='column' mb='3'>
+		<Flex
+			direction='column'
+			mb={isMobile ? '3' : '1'}
+		>
 			<ReactSelect
 				name={inputName}
 				value={value ? { label: value, value } : null}
@@ -38,7 +43,7 @@ const SelectInput: React.FC<ISelectInputProps> = ({
 					const _val = val as unknown as ISelectOption;
 					setFieldValue(inputName, _val.value, true);
 				}}
-				className='select-con'
+				className={isMobile ? '' : 'input-width'}
 				isClearable
 			/>
 			{isTouched && errorMessage ? (

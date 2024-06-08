@@ -1,4 +1,5 @@
 import { useDeleteRequest } from '@/hooks/reactQuery';
+import { useResponsiveScales } from '@/hooks/reactResponsive';
 import { userDataRStateAtom } from '@/state/userState';
 import { API_URLS } from '@/utils/constants';
 import { clearAuthDataFromLocalStorage } from '@/utils/helpers';
@@ -8,18 +9,11 @@ import {
 } from '@/utils/helpers/reactToastify';
 import { Button } from '@radix-ui/themes';
 import { useSetRecoilState } from 'recoil';
-import { useMediaQuery } from 'react-responsive';
 
 const LogoutButton: React.FC = () => {
+	const { isMobile, isTablet } = useResponsiveScales();
 	const setUserDataRState = useSetRecoilState(userDataRStateAtom);
 	const { mutateAsync: logoutUser } = useDeleteRequest();
-
-	const isDesktop = useMediaQuery({
-		minWidth: '901px',
-	});
-	const isMobile = useMediaQuery({
-		maxWidth: '700px',
-	});
 
 	const onLogout = async () => {
 		try {
@@ -39,7 +33,7 @@ const LogoutButton: React.FC = () => {
 	return (
 		<Button
 			onClick={onLogout}
-			size={isDesktop ? '3' : '2'}
+			size={isTablet ? '3' : '2'}
 			color='red'
 			mb={isMobile ? '2' : '0'}
 		>

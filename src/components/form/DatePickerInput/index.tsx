@@ -1,10 +1,10 @@
-
 import { ISearchArticlesFiltersFormData } from '@/types/formData';
 import { useFormikContext } from 'formik';
 import DatePicker from 'react-datepicker';
 import dayjs from 'dayjs';
 import './styles.css';
 import { Flex, Text } from '@radix-ui/themes';
+import { useResponsiveScales } from '@/hooks/reactResponsive';
 
 interface IDatePickerInputProps {
 	value?: string | Date | null;
@@ -25,11 +25,16 @@ const DatePickerInput: React.FC<IDatePickerInputProps> = ({
 	errorMessage,
 	isTouched,
 }) => {
+	const { isMobile } = useResponsiveScales();
 	const { setFieldValue, handleBlur } =
 		useFormikContext<ISearchArticlesFiltersFormData>();
 
 	return (
-		<Flex direction='column' mb='3'>
+		<Flex
+			direction='column'
+			mb={isMobile ? '3' : '1'}
+			width={isMobile ? '100%' : '200px'}
+		>
 			<DatePicker
 				selected={value ? new Date(value) : null}
 				onChange={(date) => {

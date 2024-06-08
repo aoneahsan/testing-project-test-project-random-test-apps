@@ -1,28 +1,19 @@
 import NewsGridItem from '../NewsGridItem';
-import { Box, Flex, Grid, Heading } from '@radix-ui/themes';
+import { Box, Grid } from '@radix-ui/themes';
 
 import './styles.css';
-import { useMediaQuery } from 'react-responsive';
 import { INewsItem } from '@/types/newsArticlesFrontend';
 import FullPageCenteredMessage from '../FullPageCenteredMessage';
+import { useResponsiveScales } from '@/hooks/reactResponsive';
 
 interface INewsGridProps {
 	newsArticles: INewsItem[];
 }
 
 const NewsGrid: React.FC<INewsGridProps> = ({ newsArticles }) => {
-	const isLargeScreen = useMediaQuery({
-		minWidth: '1900px',
-	});
-	const isDesktop = useMediaQuery({
-		minWidth: '1350px',
-	});
-	const isTablet = useMediaQuery({
-		minWidth: '1000px',
-	});
-	const isMobile = useMediaQuery({
-		maxWidth: '700px',
-	});
+	const { isMobile, isTablet, isDesktop, isLargeScreen } =
+		useResponsiveScales();
+
 	return (
 		<Box
 			className='container'
