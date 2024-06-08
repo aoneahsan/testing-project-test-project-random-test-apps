@@ -8,7 +8,6 @@ use App\Models\User;
 use App\Utils\AppHelper;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -31,9 +30,9 @@ class UserController extends Controller
 
             $user->update([
                 'name' => $request->has('name') ? $request->get('name') : $user->name,
-                'newsSource' => $request->has('newsSource') ? $request->get('newsSource') : $user->newsSource,
-                'newsCategory' => $request->has('newsCategory') ? $request->get('newsCategory') : $user->newsCategory,
-                'newsAuthor' => $request->has('newsAuthor') ? $request->get('newsAuthor') : $user->newsAuthor,
+                'newsSources' => $request->has('newsSources') ? $request->get('newsSources') : $user->newsSources,
+                'newsCategories' => $request->has('newsCategories') ? $request->get('newsCategories') : $user->newsCategories,
+                'newsAuthors' => $request->has('newsAuthors') ? $request->get('newsAuthors') : $user->newsAuthors,
             ]);
 
             $updatedUserData = User::where('id', '=', $user->id)->first();

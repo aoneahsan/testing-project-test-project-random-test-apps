@@ -21,9 +21,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'newsSource',
-        'newsCategory',
-        'newsAuthor',
+        'newsSources',
+        'newsCategories',
+        'newsAuthors',
     ];
 
     /**
