@@ -1,0 +1,20 @@
+11-12-24
+
+was going through this https://documentation.onesignal.com/docs/onesignal-service-worker-faq
+
+
+need to set the service worker file path properly
+
+
+next once i have tested and understand the web push notifications flow
+
+need to continue with mobile push notification flow
+
+
+need to go through 
+
+https://documentation.onesignal.com/docs/ionic-capacitor-cordova-sdk-setup
+
+
+
+and implement that and continue from there
