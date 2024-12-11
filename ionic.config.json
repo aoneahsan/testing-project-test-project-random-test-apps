@@ -1,7 +1,0 @@
-{
-  "name": "01-react19-test",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "react-vite"
-}
