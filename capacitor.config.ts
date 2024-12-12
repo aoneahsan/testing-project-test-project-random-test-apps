@@ -1,9 +1,9 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.zaions.app',
-  appName: '01-react19-test',
-  webDir: 'dist'
+	appId: 'com.zaions.onesignaltestapp1',
+	appName: 'perkforce-one-signal',
+	webDir: 'dist',
 };
 
 export default config;
