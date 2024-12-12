@@ -20,13 +20,19 @@ const Home = () => {
 				const result = await OneSignal.init({
 					appId: ENVS.oneSignalAppId,
 					allowLocalhostAsSecureOrigin: true,
-					autoRegister: true,
+					autoRegister: false,
 					autoResubscribe: true,
 					notifyButton: {
 						enabled: true,
 					},
-					// serviceWorkerPath: '/push-notifications/one-signal',
-					path: 'push-notifications/one-signal/',
+					path: '/',
+					serviceWorkerPath:
+						'push-notifications/one-signal/OneSignalSDKWorker.js',
+					serviceWorkerParam: {
+						scope: '/push-notifications/one-signal/',
+					}, // Changed scope
+					// Enable for debugging
+					enableLogs: true,
 				});
 
 				console.log({ result });
@@ -39,9 +45,7 @@ const Home = () => {
 	return (
 		<>
 			<h1>home page</h1>
-
 			<p>{oneSignalZState.initialized ? 'on' : 'off'}</p>
-
 			<button
 				onClick={() => {
 					OneSignal.setConsentRequired(false);
@@ -49,6 +53,7 @@ const Home = () => {
 			>
 				set consent required to false
 			</button>
+			<br />
 			<button
 				onClick={() => {
 					OneSignal.setConsentRequired(true);
@@ -56,6 +61,7 @@ const Home = () => {
 			>
 				set consent required to true
 			</button>
+			<br />
 			<button
 				onClick={() => {
 					OneSignal.setConsentGiven(false);
@@ -63,6 +69,7 @@ const Home = () => {
 			>
 				set consent given to false
 			</button>
+			<br />
 			<button
 				onClick={() => {
 					OneSignal.setConsentGiven(true);
@@ -70,13 +77,137 @@ const Home = () => {
 			>
 				set consent given to true
 			</button>
+			<br />
 			<button
 				onClick={() => {
-					OneSignal.setConsentRequired(true);
+					OneSignal.login('aoneahsan@gmail.com');
 				}}
 			>
-				add external id
+				login('aoneahsan@gmail.com')
 			</button>
+			<br />
+			<button
+				onClick={() => {
+					OneSignal.login('ahsan@perkforce.com');
+				}}
+			>
+				login('ahsan@perkforce.com')
+			</button>
+			<br />
+			<button
+				onClick={() => {
+					OneSignal.login('ahsan@zaions.com');
+				}}
+			>
+				login('ahsan@zaions.com')
+			</button>
+			<br />
+			<button
+				onClick={() => {
+					OneSignal.Notifications.requestPermission();
+				}}
+			>
+				one signal requestPermission
+			</button>
+			<br />
+			<button
+				onClick={() => {
+					OneSignal.Slidedown.promptPush();
+				}}
+			>
+				one signal Slidedown.promptPush
+			</button>
+			<br />
+			<button
+				onClick={() => {
+					OneSignal.logout();
+				}}
+			>
+				one signal logout
+			</button>
+			<br />
+			<button
+				onClick={() => {
+					OneSignal.User.PushSubscription.optIn();
+				}}
+			>
+				one signal User.PushSubscription.optIn
+			</button>
+			<br />
+			<button
+				onClick={() => {
+					OneSignal.User.PushSubscription.optOut();
+				}}
+			>
+				one signal User.PushSubscription.optOut
+			</button>
+			<br />
+			<button
+				onClick={() => {
+					console.log({ OneSignal });
+				}}
+			>
+				one signal log data
+			</button>
+			<br />
+			<button
+				onClick={() => {
+					OneSignal.User.addEmail('email-added@zaions.com');
+				}}
+			>
+				one signal - User.addEmail
+			</button>
+			<br />
+			<button
+				onClick={() => {
+					OneSignal.User.addSms('+923046619706');
+				}}
+			>
+				one signal - User.addSms
+			</button>
+			<br />
+			<button
+				onClick={() => {
+					OneSignal.User.addAliases({
+						googleId: 'googleId',
+						facebookId: 'facebookId',
+						linkedinId: 'linkedinId',
+					});
+				}}
+			>
+				one signal - User.addAliases
+			</button>
+			<br />
+			<button
+				onClick={() => {
+					OneSignal.User.addTags({
+						tag1: 'tag1',
+						tag2: 'tag2',
+						tag3: 'tag3',
+					});
+				}}
+			>
+				one signal - User.addTags
+			</button>
+			<br />
+			<button
+				onClick={() => {
+					OneSignal.Notifications.setDefaultTitle(
+						'Notifications.setDefaultTitle'
+					);
+				}}
+			>
+				one signal - Notifications.setDefaultTitle
+			</button>
+			<br />
+			<button
+				onClick={() => {
+					OneSignal.Notifications.setDefaultUrl('Notifications.setDefaultUrl');
+				}}
+			>
+				one signal - Notifications.setDefaultUrl
+			</button>
+			<br />
 		</>
 	);
 };
