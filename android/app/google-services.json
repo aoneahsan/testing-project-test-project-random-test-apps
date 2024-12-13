@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "840476138860",
+    "firebase_url": "https://perkforce-test-app-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "perkforce-test-app",
+    "storage_bucket": "perkforce-test-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:840476138860:android:f6219f09caf3b5eb3fe749",
+        "android_client_info": {
+          "package_name": "com.aoneahsan.perkforce"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAsuCiSVOm02rRSiJZdHmPs8d5U0lRfRY0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:840476138860:android:40f061cfb3e86a453fe749",
+        "android_client_info": {
+          "package_name": "com.zaions.onesignaltestapp1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAsuCiSVOm02rRSiJZdHmPs8d5U0lRfRY0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
