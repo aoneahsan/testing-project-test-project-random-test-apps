@@ -9,6 +9,7 @@ console.log({ ENVS });
 
 const Home = () => {
 	return <>{isWeb ? <WebOneSignal /> : <MobileOneSignal />}</>;
+	// return <>{isWeb ? <WebOneSignal /> : <h1>mobile component here</h1>}</>;
 };
 
 export default Home;

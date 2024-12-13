@@ -901,7 +901,7 @@
   resolved "https://registry.yarnpkg.com/@capacitor/dialog/-/dialog-6.0.2.tgz#e0c032da979036f3fa01264e006edf341444b9f4"
   integrity sha512-yHWCJjEJeZJwltAuWdoPeUE11KFxfkmE/ybZXQu9AuQYYO0tO12fQyz3b3kQtupnL5wlH3Dff3M8RsQiLyTzQg==
 
-"@capacitor/geolocation@^6.0.2":
+"@capacitor/geolocation@^6.1.0":
   version "6.1.0"
   resolved "https://registry.yarnpkg.com/@capacitor/geolocation/-/geolocation-6.1.0.tgz#cce926a19730a4bccdf2cecb49da1adabc876a00"
   integrity sha512-jEY5DcZirxX1gOBuOvf/FL7FlPMOKcsnF8PlfYxu7OFwRDD7HRwehEPWtJXR6wSYLgsCujm7yRqKrjtyN+f14g==
