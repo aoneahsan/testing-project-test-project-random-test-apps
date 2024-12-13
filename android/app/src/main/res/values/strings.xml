@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">perkforce-one-signal</string>
+    <string name="title_activity_main">perkforce-one-signal</string>
+    <string name="package_name">com.zaions.onesignaltestapp1</string>
+    <string name="custom_url_scheme">com.zaions.onesignaltestapp1</string>
+</resources>
