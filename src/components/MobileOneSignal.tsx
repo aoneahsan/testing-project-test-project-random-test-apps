@@ -2,6 +2,7 @@ import { useOneSignalZState } from '@app/state/oneSignal.state';
 import ENVS from '@app/utils/envKeys';
 import { useEffect } from 'react';
 import OneSignalMobile from 'onesignal-cordova-plugin';
+import { showDialog } from '@app/utils/capacitorApis/inde';
 
 // without this in localhost, due to "React.StrictMode" i was getting error in console
 let isInitialized = false;
@@ -47,6 +48,10 @@ const MobileOneSignal = () => {
 			<button
 				onClick={() => {
 					OneSignalMobile.setConsentRequired(false);
+					showDialog({
+						title: 'Consent Required',
+						message: 'Consent Required set to false',
+					});
 				}}
 			>
 				set consent required to false
@@ -55,6 +60,10 @@ const MobileOneSignal = () => {
 			<button
 				onClick={() => {
 					OneSignalMobile.setConsentRequired(true);
+					showDialog({
+						title: 'Consent Required',
+						message: 'Consent Required set to true',
+					});
 				}}
 			>
 				set consent required to true
@@ -63,6 +72,10 @@ const MobileOneSignal = () => {
 			<button
 				onClick={() => {
 					OneSignalMobile.setConsentGiven(false);
+					showDialog({
+						title: 'Consent Given',
+						message: 'Consent Given set to false',
+					});
 				}}
 			>
 				set consent given to false
@@ -71,6 +84,10 @@ const MobileOneSignal = () => {
 			<button
 				onClick={() => {
 					OneSignalMobile.setConsentGiven(true);
+					showDialog({
+						title: 'Consent Given',
+						message: 'Consent Given set to true',
+					});
 				}}
 			>
 				set consent given to true
@@ -79,6 +96,10 @@ const MobileOneSignal = () => {
 			<button
 				onClick={() => {
 					OneSignalMobile.login('aoneahsan@gmail.com');
+					showDialog({
+						title: 'Login',
+						message: 'Login with aoneahsan@gmail.com',
+					});
 				}}
 			>
 				login('aoneahsan@gmail.com')
@@ -87,6 +108,10 @@ const MobileOneSignal = () => {
 			<button
 				onClick={() => {
 					OneSignalMobile.login('ahsan@perkforce.com');
+					showDialog({
+						title: 'Login',
+						message: 'Login with ahsan@perkforce.com',
+					});
 				}}
 			>
 				login('ahsan@perkforce.com')
@@ -95,6 +120,10 @@ const MobileOneSignal = () => {
 			<button
 				onClick={() => {
 					OneSignalMobile.login('ahsan@zaions.com');
+					showDialog({
+						title: 'Login',
+						message: 'Login with ahsan@zaions.com',
+					});
 				}}
 			>
 				login('ahsan@zaions.com')
@@ -103,6 +132,10 @@ const MobileOneSignal = () => {
 			<button
 				onClick={() => {
 					OneSignalMobile.Notifications.requestPermission();
+					showDialog({
+						title: 'Request Permission',
+						message: 'Request Permission',
+					});
 				}}
 			>
 				one signal requestPermission
@@ -111,6 +144,10 @@ const MobileOneSignal = () => {
 			<button
 				onClick={() => {
 					OneSignalMobile.logout();
+					showDialog({
+						title: 'Logout',
+						message: 'Logout',
+					});
 				}}
 			>
 				one signal logout
@@ -119,6 +156,10 @@ const MobileOneSignal = () => {
 			<button
 				onClick={() => {
 					OneSignalMobile.User.pushSubscription.optIn();
+					showDialog({
+						title: 'User.pushSubscription.optIn',
+						message: 'User.pushSubscription.optIn',
+					});
 				}}
 			>
 				one signal User.pushSubscription.optIn
@@ -127,6 +168,10 @@ const MobileOneSignal = () => {
 			<button
 				onClick={() => {
 					OneSignalMobile.User.pushSubscription.optOut();
+					showDialog({
+						title: 'User.pushSubscription.optOut',
+						message: 'User.pushSubscription.optOut',
+					});
 				}}
 			>
 				one signal User.pushSubscription.optOut
@@ -135,6 +180,10 @@ const MobileOneSignal = () => {
 			<button
 				onClick={() => {
 					console.log({ OneSignalMobile });
+					showDialog({
+						title: 'OneSignalMobile',
+						message: 'OneSignalMobile log data',
+					});
 				}}
 			>
 				one signal log data
@@ -143,6 +192,10 @@ const MobileOneSignal = () => {
 			<button
 				onClick={() => {
 					OneSignalMobile.User.addEmail('email-added@zaions.com');
+					showDialog({
+						title: 'User.addEmail',
+						message: 'User.addEmail',
+					});
 				}}
 			>
 				one signal - User.addEmail
@@ -151,6 +204,10 @@ const MobileOneSignal = () => {
 			<button
 				onClick={() => {
 					OneSignalMobile.User.addSms('+923046619706');
+					showDialog({
+						title: 'User.addSms',
+						message: 'User.addSms',
+					});
 				}}
 			>
 				one signal - User.addSms
@@ -163,6 +220,10 @@ const MobileOneSignal = () => {
 						facebookId: 'facebookId',
 						linkedinId: 'linkedinId',
 					});
+					showDialog({
+						title: 'User.addAliases',
+						message: 'User.addAliases',
+					});
 				}}
 			>
 				one signal - User.addAliases
@@ -174,6 +235,10 @@ const MobileOneSignal = () => {
 						tag1: 'tag1',
 						tag2: 'tag2',
 						tag3: 'tag3',
+					});
+					showDialog({
+						title: 'User.addTags',
+						message: 'User.addTags',
 					});
 				}}
 			>

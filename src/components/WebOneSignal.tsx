@@ -1,4 +1,5 @@
 import { useOneSignalZState } from '@app/state/oneSignal.state';
+import { showDialog } from '@app/utils/capacitorApis/inde';
 import ENVS from '@app/utils/envKeys';
 import { useEffect } from 'react';
 import OneSignal from 'react-onesignal';
@@ -47,6 +48,10 @@ const WebOneSignal = () => {
 			<button
 				onClick={() => {
 					OneSignal.setConsentRequired(false);
+					showDialog({
+						title: 'Consent Required',
+						message: 'Consent Required set to false',
+					});
 				}}
 			>
 				set consent required to false
@@ -55,6 +60,10 @@ const WebOneSignal = () => {
 			<button
 				onClick={() => {
 					OneSignal.setConsentRequired(true);
+					showDialog({
+						title: 'Consent Required',
+						message: 'Consent Required set to true',
+					});
 				}}
 			>
 				set consent required to true
@@ -63,6 +72,10 @@ const WebOneSignal = () => {
 			<button
 				onClick={() => {
 					OneSignal.setConsentGiven(false);
+					showDialog({
+						title: 'Consent Given',
+						message: 'Consent Given set to false',
+					});
 				}}
 			>
 				set consent given to false
@@ -71,6 +84,10 @@ const WebOneSignal = () => {
 			<button
 				onClick={() => {
 					OneSignal.setConsentGiven(true);
+					showDialog({
+						title: 'Consent Given',
+						message: 'Consent Given set to true',
+					});
 				}}
 			>
 				set consent given to true
@@ -79,6 +96,10 @@ const WebOneSignal = () => {
 			<button
 				onClick={() => {
 					OneSignal.login('aoneahsan@gmail.com');
+					showDialog({
+						title: 'Login',
+						message: 'Logged in as aoneahsan@gmail.com',
+					});
 				}}
 			>
 				login('aoneahsan@gmail.com')
@@ -87,6 +108,10 @@ const WebOneSignal = () => {
 			<button
 				onClick={() => {
 					OneSignal.login('ahsan@perkforce.com');
+					showDialog({
+						title: 'Login',
+						message: 'Logged in as ahsan@perkforce.com',
+					});
 				}}
 			>
 				login('ahsan@perkforce.com')
@@ -95,6 +120,10 @@ const WebOneSignal = () => {
 			<button
 				onClick={() => {
 					OneSignal.login('ahsan@zaions.com');
+					showDialog({
+						title: 'Login',
+						message: 'Logged in as ahsan@zaions.com',
+					});
 				}}
 			>
 				login('ahsan@zaions.com')
@@ -103,6 +132,10 @@ const WebOneSignal = () => {
 			<button
 				onClick={() => {
 					OneSignal.Notifications.requestPermission();
+					showDialog({
+						title: 'Request Permission',
+						message: 'Request Permission',
+					});
 				}}
 			>
 				one signal requestPermission
@@ -119,6 +152,10 @@ const WebOneSignal = () => {
 			<button
 				onClick={() => {
 					OneSignal.logout();
+					showDialog({
+						title: 'Logout',
+						message: 'Logged out',
+					});
 				}}
 			>
 				one signal logout
@@ -127,6 +164,10 @@ const WebOneSignal = () => {
 			<button
 				onClick={() => {
 					OneSignal.User.PushSubscription.optIn();
+					showDialog({
+						title: 'User.PushSubscription.optIn',
+						message: 'User.PushSubscription.optIn',
+					});
 				}}
 			>
 				one signal User.PushSubscription.optIn
@@ -135,6 +176,10 @@ const WebOneSignal = () => {
 			<button
 				onClick={() => {
 					OneSignal.User.PushSubscription.optOut();
+					showDialog({
+						title: 'User.PushSubscription.optOut',
+						message: 'User.PushSubscription.optOut',
+					});
 				}}
 			>
 				one signal User.PushSubscription.optOut
@@ -143,6 +188,10 @@ const WebOneSignal = () => {
 			<button
 				onClick={() => {
 					console.log({ OneSignal });
+					showDialog({
+						title: 'OneSignal',
+						message: 'OneSignal',
+					});
 				}}
 			>
 				one signal log data
@@ -151,6 +200,10 @@ const WebOneSignal = () => {
 			<button
 				onClick={() => {
 					OneSignal.User.addEmail('email-added@zaions.com');
+					showDialog({
+						title: 'User.addEmail',
+						message: 'User.addEmail',
+					});
 				}}
 			>
 				one signal - User.addEmail
@@ -159,6 +212,10 @@ const WebOneSignal = () => {
 			<button
 				onClick={() => {
 					OneSignal.User.addSms('+923046619706');
+					showDialog({
+						title: 'User.addSms',
+						message: 'User.addSms',
+					});
 				}}
 			>
 				one signal - User.addSms
@@ -170,6 +227,10 @@ const WebOneSignal = () => {
 						googleId: 'googleId',
 						facebookId: 'facebookId',
 						linkedinId: 'linkedinId',
+					});
+					showDialog({
+						title: 'User.addAliases',
+						message: 'User.addAliases',
 					});
 				}}
 			>
@@ -183,6 +244,10 @@ const WebOneSignal = () => {
 						tag2: 'tag2',
 						tag3: 'tag3',
 					});
+					showDialog({
+						title: 'User.addTags',
+						message: 'User.addTags',
+					});
 				}}
 			>
 				one signal - User.addTags
@@ -193,6 +258,10 @@ const WebOneSignal = () => {
 					OneSignal.Notifications.setDefaultTitle(
 						'Notifications.setDefaultTitle'
 					);
+					showDialog({
+						title: 'Notifications.setDefaultTitle',
+						message: 'Notifications.setDefaultTitle',
+					});
 				}}
 			>
 				one signal - Notifications.setDefaultTitle
@@ -201,6 +270,10 @@ const WebOneSignal = () => {
 			<button
 				onClick={() => {
 					OneSignal.Notifications.setDefaultUrl('Notifications.setDefaultUrl');
+					showDialog({
+						title: 'Notifications.setDefaultUrl',
+						message: 'Notifications.setDefaultUrl',
+					});
 				}}
 			>
 				one signal - Notifications.setDefaultUrl

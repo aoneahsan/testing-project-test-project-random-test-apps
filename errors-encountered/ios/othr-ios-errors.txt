@@ -1,0 +1,10 @@
+[question]: APNS Delegate Never Fired #1484
+
+https://github.com/OneSignal/react-native-onesignal/issues/1484
+
+
+https://documentation.onesignal.com/docs/troubleshooting-ios#:~:text=%22APNS%20Delegate%20Never%20Fired%22%20is,is%20more%20rare%20in%20Production.
+
+
+
+------------------------------------------------------------------------------------------------------------------------

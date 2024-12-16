@@ -35,3 +35,14 @@ MacBookPro:01-react19-test ahsan$ nmr cap:ios:add
         fatal: fetch-pack: invalid index-pack output
         
 MacBookPro:01-react19-test ahsan$ 
+
+
+
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------
+
+i tried deleting and recreating the ios folder and it worked, so there's no clear identification of the error, may be it's just the server/internet or something else.
+
+but not fully clear.
