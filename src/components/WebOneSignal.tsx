@@ -34,6 +34,35 @@ const WebOneSignal = () => {
 					enableLogs: true,
 				});
 
+				OneSignal.Slidedown.addEventListener('slidedownShown', () => {
+					console.log('Slidedown Shown');
+				});
+
+				OneSignal.Notifications.addEventListener(
+					'foregroundWillDisplay',
+					(event) => {
+						console.log('OneSignal foregroundWillDisplay:', event);
+					}
+				);
+				OneSignal.Notifications.addEventListener('click', (event) => {
+					console.log('OneSignal click:', event);
+				});
+				OneSignal.Notifications.addEventListener('dismiss', (event) => {
+					console.log('OneSignal dismiss:', event);
+				});
+				OneSignal.Notifications.addEventListener(
+					'permissionChange',
+					(event) => {
+						console.log('OneSignal permissionChange:', event);
+					}
+				);
+				OneSignal.Notifications.addEventListener(
+					'permissionPromptDisplay',
+					(event) => {
+						console.log('OneSignal permissionPromptDisplay:', event);
+					}
+				);
+
 				console.log({ result });
 
 				oneSignalZState?.setIsInitialized();
