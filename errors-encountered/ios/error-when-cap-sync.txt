@@ -1,0 +1,58 @@
+        Be sure to first read the contributing guide for details on how to properly submit a ticket:
+        https://github.com/CocoaPods/CocoaPods/blob/master/CONTRIBUTING.md
+        
+        Don't forget to anonymize any private data!
+        
+        Looking for related issues on cocoapods/cocoapods...
+        
+MacBookPro:01-react19-test ahsan$ gs
+On branch main
+Changes not staged for commit:
+  (use "git add/rm <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	deleted:    ios/.gitignore
+	deleted:    ios/App/App.xcodeproj/project.pbxproj
+	deleted:    ios/App/App.xcworkspace/contents.xcworkspacedata
+	deleted:    ios/App/App.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
+	deleted:    ios/App/App/App.entitlements
+	deleted:    ios/App/App/AppDelegate.swift
+	deleted:    ios/App/App/Assets.xcassets/AppIcon.appiconset/AppIcon-512@2x.png
+	deleted:    ios/App/App/Assets.xcassets/AppIcon.appiconset/Contents.json
+	deleted:    ios/App/App/Assets.xcassets/Contents.json
+	deleted:    ios/App/App/Assets.xcassets/Splash.imageset/Contents.json
+	deleted:    ios/App/App/Assets.xcassets/Splash.imageset/splash-2732x2732-1.png
+	deleted:    ios/App/App/Assets.xcassets/Splash.imageset/splash-2732x2732-2.png
+	deleted:    ios/App/App/Assets.xcassets/Splash.imageset/splash-2732x2732.png
+	deleted:    ios/App/App/Base.lproj/LaunchScreen.storyboard
+	deleted:    ios/App/App/Base.lproj/Main.storyboard
+	deleted:    ios/App/App/Info.plist
+	deleted:    ios/App/OneSignalNotificationServiceExtension/Info.plist
+	deleted:    ios/App/OneSignalNotificationServiceExtension/NotificationService.swift
+	deleted:    ios/App/OneSignalNotificationServiceExtension/OneSignalNotificationServiceExtension.entitlements
+	deleted:    ios/App/Podfile
+
+no changes added to commit (use "git add" and/or "git commit -a")
+MacBookPro:01-react19-test ahsan$ ga && gcm "was getting error in ios folder when running the cap:sync command, so now doing it again"
+[main 0ba14c5] was getting error in ios folder when running the cap:sync command, so now doing it again
+ 20 files changed, 983 deletions(-)
+ delete mode 100644 ios/.gitignore
+ delete mode 100644 ios/App/App.xcodeproj/project.pbxproj
+ delete mode 100644 ios/App/App.xcworkspace/contents.xcworkspacedata
+ delete mode 100644 ios/App/App.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
+ delete mode 100644 ios/App/App/App.entitlements
+ delete mode 100644 ios/App/App/AppDelegate.swift
+ delete mode 100644 ios/App/App/Assets.xcassets/AppIcon.appiconset/AppIcon-512@2x.png
+ delete mode 100644 ios/App/App/Assets.xcassets/AppIcon.appiconset/Contents.json
+ delete mode 100644 ios/App/App/Assets.xcassets/Contents.json
+ delete mode 100644 ios/App/App/Assets.xcassets/Splash.imageset/Contents.json
+ delete mode 100644 ios/App/App/Assets.xcassets/Splash.imageset/splash-2732x2732-1.png
+ delete mode 100644 ios/App/App/Assets.xcassets/Splash.imageset/splash-2732x2732-2.png
+ delete mode 100644 ios/App/App/Assets.xcassets/Splash.imageset/splash-2732x2732.png
+ delete mode 100644 ios/App/App/Base.lproj/LaunchScreen.storyboard
+ delete mode 100644 ios/App/App/Base.lproj/Main.storyboard
+ delete mode 100644 ios/App/App/Info.plist
+ delete mode 100644 ios/App/OneSignalNotificationServiceExtension/Info.plist
+ delete mode 100644 ios/App/OneSignalNotificationServiceExtension/NotificationService.swift
+ delete mode 100644 ios/App/OneSignalNotificationServiceExtension/OneSignalNotificationServiceExtension.entitlements
+ delete mode 100644 ios/App/Podfile
+MacBookPro:01-react19-test ahsan$ nmr cap:ios:add

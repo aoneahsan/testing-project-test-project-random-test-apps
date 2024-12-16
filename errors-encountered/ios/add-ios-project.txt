@@ -1,0 +1,37 @@
+MacBookPro:01-react19-test ahsan$ nmr cap:ios:add
+
+> 01-react19-test@0.0.1 cap:ios:add
+> cap add ios
+
+✔ Adding native Xcode project in ios in 26.71ms
+✔ add in 27.44ms
+✔ Copying web assets from dist to ios/App/App/public in 16.78ms
+✔ Creating capacitor.config.json in ios/App/App in 1.33ms
+⠙ copy ios [info] Found 1 Cordova plugin for ios:
+       onesignal-cordova-plugin@5.2.8
+✔ copy ios in 153.54ms
+✔ Updating iOS plugins in 7.36ms
+[info] Found 1 Cordova plugin for ios:
+       onesignal-cordova-plugin@5.2.8
+✖ Updating iOS native dependencies with pod install - failed!
+✖ update ios - failed!
+[error] /System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/lib/ruby/2.6.0/universal-darwin24/rbconfig.rb:21:
+        warning: Insecure world writable dir /Volumes/Personal/01-code-work/react-projects in PATH, mode 040777
+        Ignoring ffi-1.15.5 because its extensions are not built. Try: gem pristine ffi --version 1.15.5
+        Analyzing dependencies
+        Downloading dependencies
+        Installing AppAuth (1.7.6)
+        
+        [!] Error installing AppAuth
+        [!] /usr/bin/git clone https://github.com/openid/AppAuth-iOS.git
+        /var/folders/5g/qksv6fjs0j15f2m_crqd4x9h0000gn/T/d20241216-94405-dcuef4 --template= --single-branch --depth 1
+        --branch 1.7.6
+        
+        Cloning into '/var/folders/5g/qksv6fjs0j15f2m_crqd4x9h0000gn/T/d20241216-94405-dcuef4'...
+        error: RPC failed; curl 92 HTTP/2 stream 5 was not closed cleanly: CANCEL (err 8)
+        error: 14897 bytes of body are still expected
+        fetch-pack: unexpected disconnect while reading sideband packet
+        fatal: early EOF
+        fatal: fetch-pack: invalid index-pack output
+        
+MacBookPro:01-react19-test ahsan$ 
