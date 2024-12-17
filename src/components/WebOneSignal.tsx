@@ -228,14 +228,14 @@ const WebOneSignal = () => {
 			<br />
 			<button
 				onClick={() => {
-					OneSignal.User.addEmail('email-added@zaions.com');
+					OneSignal.User.addEmail('ahsan@perkforce.com');
 					showDialog({
 						title: 'User.addEmail',
-						message: 'User.addEmail',
+						message: 'User.addEmail - ahsan@perkforce.com',
 					});
 				}}
 			>
-				one signal - User.addEmail
+				one signal - User.addEmail - ahsan@perkforce.com
 			</button>
 			<br />
 			<button
@@ -243,11 +243,11 @@ const WebOneSignal = () => {
 					OneSignal.User.addSms('+923046619706');
 					showDialog({
 						title: 'User.addSms',
-						message: 'User.addSms',
+						message: 'User.addSms - +923046619706',
 					});
 				}}
 			>
-				one signal - User.addSms
+				one signal - User.addSms - +923046619706
 			</button>
 			<br />
 			<button
